@@ -57,14 +57,14 @@ Test:
 - [x] Selecting inside an input/textarea shows no popup
 
 ## Phase 3 — Translate in a new tab
-**Translate → EN/BG** button and right-click menu entry. (A keyboard
-shortcut was built, then removed at the user's request.)
+**Translate → EN/BG** button in the popup. (A context-menu entry and a
+keyboard shortcut were built, then removed at the user's request: Floorp
+already has its own "Translate selection" menu item.)
 
 Test:
 - [x] Any source language works with no setup (`sl=auto`): Japanese, Chinese, Korean, Arabic (RTL), Hebrew, Russian, German, Spanish, Turkish, Hindi → new tab right after the current one with `tl=en` and the text filled in
 - [x] Mixed-language selection (e.g. English sentence with a Japanese name) still opens correctly
 - [x] Switch setting to Bulgarian → button label and tab use `tl=bg`, no reload needed
-- [ ] Right-click → "Translate “…” → EN" works; menu label follows the setting
 - [x] Text > 5000 chars: tab gets a truncated part ending at a sentence, full text is on the clipboard
 - [x] Long non-Latin text (Japanese ~3300 chars) is cut to fit Google's URL limit (~1300 chars) and still opens
 - [x] Text with `&`, `#`, `?`, newlines and emoji arrives intact

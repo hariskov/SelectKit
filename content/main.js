@@ -82,12 +82,3 @@ document.addEventListener("selectionchange", () => {
 
 window.addEventListener("scroll", () => popup.hide(), { passive: true, capture: true });
 window.addEventListener("resize", () => popup.hide());
-
-// From the context menu. Only the frame that has a selection answers.
-browser.runtime.onMessage.addListener((msg) => {
-  if (msg.type !== "translate-selection") return;
-  const text = selectedText();
-  if (!text) return;
-  popup.hide();
-  return translate(text).then(() => true);
-});

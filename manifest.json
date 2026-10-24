@@ -16,8 +16,7 @@
   },
   "permissions": [
     "storage",
-    "clipboardWrite",
-    "menus"
+    "clipboardWrite"
   ],
   "background": {
     "scripts": [

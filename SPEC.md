@@ -36,7 +36,8 @@ https://translate.google.com/?sl=auto&tl=<target>&text=<selection>&op=translate
   to 9 URL characters per character, so Japanese fits ~1,300 characters).
   The cut is made at a sentence or word boundary, and the full text is copied
   to the clipboard.
-- Also available from the right-click menu. No keyboard shortcut (by choice).
+- Only from the popup: no context-menu entry (Floorp already has its own
+  "Translate selection") and no keyboard shortcut, both by choice.
 
 ## F3 — Conversion
 
@@ -123,7 +124,7 @@ history, sync between devices.
 
 ```
 manifest.json        MV3; background uses "scripts" (Firefox event page)
-background.js        opens translate tabs, context menu, rate fetch/cache
+background.js        opens translate tabs, rate fetch/cache
 content/selection.js word completion (Intl.Segmenter + Range API)
 content/detect.js    price and unit parsing + conversion  (phase 4–5)
 content/popup.js     Shadow-DOM popup at the mouse

@@ -57,6 +57,8 @@ document.addEventListener("mouseup", (event) => {
   }
   // Let the browser finish updating the selection (matters for double/triple click).
   setTimeout(() => {
+    // Double/triple click already select whole words/paragraphs.
+    if (settings.wordWrapper && event.detail === 1) wrapSelectionToWords();
     const text = selectedText();
     if (!text) {
       popup.hide();

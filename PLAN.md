@@ -74,16 +74,18 @@ Test:
 Partly selected words at either edge get selected in full.
 
 Test:
-- [ ] `ect all wor` → `select all words` (dragging left→right)
-- [ ] Same, dragging right→left; shift+arrow afterwards extends in the expected direction
-- [ ] Edges already on a word boundary or on spaces/punctuation don't move
-- [ ] Double-click and triple-click behave exactly as before
-- [ ] Bulgarian text (`ктирай всич` → `селектирай всички`)
-- [ ] Languages without spaces (Japanese, Chinese, Thai) snap to dictionary words and don't jump wildly
-- [ ] RTL text (Arabic, Hebrew) and accented Latin (`Straße`, `café`, `naïve`) complete correctly
-- [ ] Selections in inputs/textareas/editors are never changed
-- [ ] Toggle off in settings → no snapping
-- [ ] Unit tests for word boundaries pass
+- [x] `ect all wor` → `select all words` (dragging left→right)
+- [x] Same, dragging right→left; shift+arrow afterwards extends in the expected direction
+- [x] Edges already on a word boundary or on spaces/punctuation don't move
+- [x] Double-click and triple-click behave exactly as before
+- [x] Bulgarian text (`ктирай всич` → `селектирай всички`)
+- [x] Languages without spaces (Japanese, Chinese, Thai) snap to dictionary words and don't jump wildly
+- [x] RTL text (Arabic, Hebrew) and accented Latin (`Straße`, `café`, `naïve`) complete correctly
+- [x] Words split by markup (`im<b>port</b>ant`) complete across the tags
+- [x] Popup Copy/Translate use the completed selection
+- [x] Selections in inputs/textareas/editors are never changed
+- [x] Toggle off in settings → no snapping
+- [x] Unit tests for word boundaries pass
 
 ## Phase 5 — Unit conversion (offline)
 Popup shows the metric result when the selection is a measurement.

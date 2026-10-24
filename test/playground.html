@@ -25,7 +25,7 @@
   <section id="phase-0">
     <h2>Phase 0 — Skeleton</h2>
     <p>If Floorp opened on this page with the SelectKit icon in the toolbar, the extension is loaded.</p>
-    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.3.0 loaded”.</p>
+    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.4.0 loaded”.</p>
   </section>
 
   <section id="phase-1">
@@ -102,6 +102,30 @@
         Array.from({ length: 160 }, (_, i) => `Sentence number ${i + 1} is here to make this text long enough. `).join("");
       document.getElementById("long-ja").textContent = "これは日本語の長い文章のテストです。".repeat(185);
     </script>
+  </section>
+
+  <section id="phase-4">
+    <h2>Phase 4 — Word wrapper</h2>
+    <ol>
+      <li>Drag from inside “select” to inside “words” (<i>ect all wor</i>) → selection becomes <b>select all words</b>; the popup's Copy gives exactly that.</li>
+      <li>Same drag right → left → same result; then Shift+→ / Shift+← extends from the end you dragged to.</li>
+      <li>Drag starting exactly at a word start or on a space → that edge stays where it is.</li>
+      <li>Double-click a word, triple-click a line → same as without the extension.</li>
+      <li>Settings → untick Word wrapper → partial drags stay partial. Tick it again afterwards.</li>
+      <li>Text fields (phase 2 section) → selection is never changed.</li>
+    </ol>
+    <ul>
+      <li>English: You should select all words that are part of the selection.</li>
+      <li lang="bg">Български: Трябва да селектирай всички думи, които са част от селекцията.</li>
+      <li lang="de">Accents: Die Straße ist naïve, das Café ist geschlossen.</li>
+      <li lang="ja">日本語：今日はとても良い天気ですね。散歩に行きましょう。</li>
+      <li lang="zh">中文：我们明天在火车站见面吧。</li>
+      <li lang="th">ไทย: สวัสดีครับ วันนี้อากาศดีมาก</li>
+      <li lang="ar" dir="rtl">العربية: مرحبا بالعالم الجميل والكبير</li>
+      <li lang="he" dir="rtl">עברית: אני לומד לבשל בבית עם חברים</li>
+      <li>Split by markup: an im<b>port</b>ant w<i>ord</i> sp<a href="#phase-4">lit</a>ting test → dragging from “port” to “ord” selects <b>important word</b>.</li>
+      <li>Numbers: the price is 1,299.50 today → dragging over “299.5” selects <b>1,299.50</b>.</li>
+    </ul>
   </section>
 
   <section id="bottom">

@@ -43,6 +43,35 @@ function renderTargetCurrency(current) {
   select.addEventListener("change", () => save("targetCurrency", select.value));
 }
 
+// --- Exchange rates ---
+
+function describeRates(rates) {
+  if (!rates) return "Exchange rates haven't been downloaded yet. They're fetched the first time you select a price.";
+  const days = Math.floor((Date.now() - rates.fetchedAt) / 86400000);
+  const checked = days === 0 ? "today" : days === 1 ? "yesterday" : `${days} days ago`;
+  const sources = [rates.ecbDate && `ECB ${rates.ecbDate}`, rates.otherDate && `exchange-api ${rates.otherDate}`]
+    .filter(Boolean).join(", ");
+  return `Rates: ${sources}. Downloaded ${checked}; updated weekly.`;
+}
+
+async function renderRates() {
+  const info = document.getElementById("ratesInfo");
+  const button = document.getElementById("refreshRates");
+  const { rates } = await browser.storage.local.get("rates");
+  info.textContent = describeRates(rates);
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    info.textContent = "Downloading…";
+    const before = (await browser.storage.local.get("rates")).rates;
+    const fresh = await browser.runtime.sendMessage({ type: "refresh-rates" });
+    const failed = !fresh || fresh.fetchedAt === before?.fetchedAt;
+    info.textContent = failed
+      ? `Couldn't download new rates. ${describeRates(fresh)}`
+      : describeRates(fresh);
+    button.disabled = false;
+  });
+}
+
 // --- Units ---
 
 function renderUnits(settings) {
@@ -104,5 +133,6 @@ getSettings().then((settings) => {
   renderTargetLang(settings.targetLang);
   renderTargetCurrency(settings.targetCurrency);
   renderUnits(settings);
+  renderRates();
   renderWordWrapper(settings.wordWrapper);
 });

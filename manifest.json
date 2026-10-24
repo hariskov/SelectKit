@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SelectKit",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Completes selections to whole words, sends text to Google Translate, converts prices and units.",
   "browser_specific_settings": {
     "gecko": {
@@ -22,6 +22,7 @@
     "scripts": [
       "lib/settings.js",
       "lib/translate.js",
+      "lib/rates.js",
       "background.js"
     ]
   },
@@ -34,6 +35,8 @@
         "lib/settings.js",
         "lib/numbers.js",
         "lib/units.js",
+        "lib/currency-data.js",
+        "lib/currencies.js",
         "lib/translate.js",
         "lib/words.js",
         "content/wordwrapper.js",

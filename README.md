@@ -12,7 +12,7 @@ A [Floorp](https://floorp.app) / Firefox extension that helps with selected text
   metric, US or UK, set per kind of measurement.
 
 > **Status:** early development, built in phases (see [PLAN.md](PLAN.md)).
-> Done so far: settings, popup at the mouse, translation, Word wrapper, unit conversion (phases 0–5). Currency is next. Not usable for
+> All features are in (phases 0–6): Word wrapper, translation, unit and currency conversion. Next: polish, then a signed install. Not usable for
 > everyday browsing yet.
 
 ## Development
@@ -35,6 +35,7 @@ extension reloads when files change. If a change doesn't show up, use
 ```sh
 npm run lint         # web-ext lint, must be clean
 npm test             # unit tests for the pure logic (node --test)
+npm run gen:currencies  # regenerate lib/currency-data.js from CLDR
 ```
 
 To try it in your normal Floorp instead: `about:debugging` → *This Floorp* →
@@ -52,6 +53,10 @@ lib/translate.js     Google Translate links and length limits
 lib/words.js         word boundaries for the Word wrapper
 lib/numbers.js       reading written numbers (1,234.5 · 1.234,5)
 lib/units.js         finding and converting measurements
+lib/currencies.js    finding and converting prices
+lib/currency-data.js currency codes and symbols from CLDR (generated)
+lib/rates.js         downloading and caching exchange rates
+scripts/             npm run gen:currencies
 options/             settings page
 icons/               toolbar icon
 test/playground.html manual test page, one section per phase

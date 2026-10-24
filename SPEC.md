@@ -48,10 +48,10 @@ measurement.
 - **Source: any currency, written any common way.** Each currency is
   recognised by its ISO 4217 code *and* its symbols/local names. Codes come
   from ISO 4217; symbols come from Unicode CLDR (the data behind the browser's
-  `Intl` API), read at runtime, so the list doesn't have to be kept by hand.
-  CLDR misses some everyday forms (`лв`/`лева`, `грн`, `lei` for MDL), so a
-  short list of extra names lives in `lib/currencies.js`. These all mean the
-  same currency:
+  `Intl` API), generated into `lib/currency-data.js` by
+  `npm run gen:currencies`, so the list isn't kept by hand. CLDR misses some
+  everyday forms (`лв`/`лева`, `грн`, `lei` for MDL), so a short list of extra
+  names lives in `lib/currencies.js`. These all mean the same currency:
 
   | Currency | Recognised as |
   |---|---|
@@ -70,8 +70,10 @@ measurement.
   | INR | `INR`, `₹`, `Rs`* |
   | … | every other ISO code, plus `£ ¥ ₩ ₽ ₪ ₫ ₱ ฿ R$ C$ A$ HK$ CHF kr RM Rp` |
 
-- Codes and names match case-insensitively (`ron`, `Lei`, `ЛВ`), before or
-  after the number, with or without a space (`12лв`, `lei 50`, `50 RON`).
+- Symbols and names match case-insensitively (`Lei`, `ЛВ`), before or after
+  the number, with or without a space (`12лв`, `lei 50`, `50 RON`). ISO codes
+  must be upper case inside a sentence (`5 try` isn't Turkish lira), but any
+  case works when the selection is just the price (`ron 50`).
 - `*` = ambiguous: the same symbol is used by several currencies (in CLDR,
   `$` is used by 29 currencies, `£` by 6, `kr` and `Rs` by 4 each).
 - **Target:** EUR (default), USD, RON or BGN, chosen in the settings. The
@@ -84,9 +86,10 @@ measurement.
   3. otherwise the most widely used currency for that symbol
      (`$` USD, `£` GBP, `¥` JPY, `kr` SEK, `Rs` INR, `lei` RON)
 - The popup shows which currency it assumed, e.g. "$19.99 (CAD) ≈ 13.20 €".
-  Clicking the currency lets you pick another one for that selection.
-- Rates, fetched at most once a day and cached in `storage.local`; the result
-  shows the rate date:
+  Clicking the assumed currency switches to the next likely one.
+- Rates are fetched when first needed, cached in `storage.local` and refreshed
+  when older than 7 days (a failed refresh keeps using the cache). The
+  settings page shows their date and source, with a **Refresh now** button:
   1. ECB reference rates via `api.frankfurter.app` (official, ~30 major currencies)
   2. Fallback for currencies the ECB doesn't cover: `fawazahmed0/exchange-api`
      (free, no key, 200+ currencies, served from jsDelivr)

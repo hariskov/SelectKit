@@ -112,41 +112,47 @@ Robustness:
 - [x] Clicking a result copies it
 - [x] Unit tests for the parser and conversions pass (most coverage lives here)
 
-## Phase 6 — Currency with fixed rates
-Price detection and parsing, converting with the BGN fixed rate (1.95583) and a
-hardcoded rate table, so parsing can be tested separately from the network.
+## Phase 6 — Currency with live rates
+Price detection and conversion to the target currency (EUR / USD / RON / BGN),
+with real exchange rates. (Originally split into "fixed rates" and "live
+rates" phases; merged so no hardcoded rates ever ship.)
 
-Test:
-- [ ] `$19.99`, `USD 40`, `40 USD`, `£5`, `¥1,200`, `CHF 12.50`
-- [ ] Other symbols: `₹1,23,456`, `₩50,000`, `₺250`, `R$ 99,90`, `150 zł`, `299 Kč`
-- [ ] Any ISO code: `VND 250000`, `40 TRY`, `AED 100`
-- [ ] Symbol and ISO code give the same result: `50 RON` = `50 lei` = `50 Lei`; `12 BGN` = `12 лв` = `12лв.` = `12 лева`; `100 UAH` = `100 грн` = `₴100`
-- [ ] Codes match in any case and on either side: `ron 50`, `50ron`, `lei 50`
-- [ ] Popup names the assumed currency: `50 lei (RON) ≈ … €`, `$20 (USD) ≈ … €`
-- [ ] Ambiguous symbol resolved from the page: `$20` on a page with `lang="en-CA"` → CAD; on a `.com.au` site → AUD; `kr` on a `lang="nb"` page → NOK
-- [ ] Clicking the assumed currency in the popup lets you pick another one (e.g. `$` → MXN)
-- [ ] `1.299,00 лв` and `12,50 лв.` → EUR via the fixed rate
-- [ ] `1,234.56`, `1.234,56`, `1 234,56` and `1'234.56` all parse correctly
-- [ ] Words that only look like aliases don't trigger: `TL;DR`, `lv 5 armor`, `Ft. Worth` (no number next to them, or a clearly non-price context)
-- [ ] Change target currency to USD, RON or BGN → results switch, no reload needed
-- [ ] Prices already in the target currency show no conversion
-- [ ] Unit tests for the price parser pass
+- Rates: ECB reference rates via Frankfurter, plus `fawazahmed0/exchange-api`
+  for currencies the ECB doesn't publish. Fetched when first needed, cached in
+  `storage.local`, refreshed when older than 7 days. BGN is always the fixed
+  1.95583 per euro.
+- Symbols and local names come from CLDR, generated into
+  `lib/currency-data.js` by `npm run gen:currencies`, plus a short list of
+  extras (`лв`, `лева`, `грн`, `lei`, …).
+- Unit tests use a fixed set of test rates; the extension never does.
 
-## Phase 7 — Live rates
-Background fetches ECB rates from `api.frankfurter.app` at most once a day,
-with `fawazahmed0/exchange-api` as the fallback for currencies the ECB doesn't
-cover. Cached in `storage.local`; the result shows the rate date and source.
+Test, detection:
+- [x] `$19.99`, `USD 40`, `40 USD`, `£5`, `¥1,200`, `CHF 12.50`
+- [x] Other symbols: `₹1,23,456`, `₩50,000`, `₺250`, `R$ 99,90`, `150 zł`, `299 Kč`
+- [x] Any ISO code: `VND 250000`, `40 TRY`, `AED 100`
+- [x] Symbol and ISO code give the same result: `50 RON` = `50 lei` = `50 Lei`; `12 BGN` = `12 лв` = `12лв.` = `12 лева`; `100 UAH` = `100 грн` = `₴100`
+- [x] Lower-case codes count when the selection is just the price: `ron 50`, `50ron`, `lei 50` (but `5 try` / `10 cup` inside a sentence don't)
+- [x] `1.299,00 лв` and `12,50 лв.` → EUR via the fixed rate
+- [x] `1,234.56`, `1.234,56`, `1 234,56` and `1'234.56` all parse correctly
+- [x] Words that only look like aliases don't trigger: `TL;DR`, `lv 5 armor`, `Ft. Worth`
 
-Test:
-- [ ] First conversion fetches rates; later ones within the day don't (Network tab)
-- [ ] ECB currency (USD, GBP, JPY) uses the ECB rate
-- [ ] Non-ECB currency (VND, AED, ARS) uses the fallback rate
-- [ ] Cross-rate when neither side is EUR (e.g. TRY → USD) is correct
-- [ ] Offline with a cache: still converts, shows the old date
-- [ ] Offline with no cache: popup says "rates unavailable" and nothing breaks
-- [ ] Unknown currency: shows no conversion instead of a wrong one
+Test, ambiguous symbols:
+- [x] Popup names the assumed currency: `50 lei (RON) ≈ …`, `$20 (USD) ≈ …`
+- [x] Resolved from the page: `$20` under `lang="en-CA"` → CAD; on a `.com.au` site → AUD; `kr` under `lang="nb"` → NOK
+- [x] Clicking the assumed currency switches to the next likely one (e.g. `$` USD → CAD → AUD …)
 
-## Phase 8 — Polish
+Test, conversion and rates:
+- [x] Change target currency to USD, RON or BGN → results switch, no reload needed
+- [x] Prices already in the target currency show no conversion
+- [x] First conversion fetches rates; later ones don't (background Network tab), until they're 7 days old
+- [x] ECB currency (USD, GBP, JPY) uses the ECB rate; non-ECB (VND, AED, ARS) the exchange-api rate
+- [x] Cross-rate when neither side is EUR (TRY → USD) is correct
+- [x] Settings show the rates' date and source, with a **Refresh now** button
+- [ ] Offline with a cache: still converts; offline with no cache: no price result, nothing breaks
+- [x] Unknown currency: no conversion instead of a wrong one
+- [x] Unit tests for detection and conversion pass
+
+## Phase 7 — Polish
 Dark/light popup that follows the system, a site blocklist in settings, a
 small delay so the popup doesn't flicker while dragging, an icon at all sizes.
 
@@ -154,7 +160,7 @@ Test:
 - [ ] One full day of normal browsing without the popup getting in the way
 - [ ] Blocklisted site → no popup, no snapping
 
-## Phase 9 — Permanent install
+## Phase 8 — Permanent install
 Sign as **unlisted** on addons.mozilla.org (`web-ext sign --channel=unlisted`,
 needs free AMO API keys) and install the `.xpi`.
 

@@ -17,4 +17,6 @@ async function openTranslateTab(text, sourceTab) {
 
 browser.runtime.onMessage.addListener((msg, sender) => {
   if (msg.type === "translate") return openTranslateTab(msg.text, sender.tab);
+  if (msg.type === "get-rates") return getRates();
+  if (msg.type === "refresh-rates") return getRates({ refresh: true });
 });

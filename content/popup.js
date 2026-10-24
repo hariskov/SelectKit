@@ -30,6 +30,7 @@ const POPUP_CSS = `
   }
   button:hover, button:focus-visible { background: #3a4048; }
   button.result { color: #8ab4ff; font-weight: 600; }
+  button.switch { color: #9aa4ae; font-size: 12px; }
   .sep { width: 1px; align-self: stretch; margin: 3px 1px; background: #3a4048; }
 `;
 

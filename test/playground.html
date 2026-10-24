@@ -25,7 +25,7 @@
   <section id="phase-0">
     <h2>Phase 0 — Skeleton</h2>
     <p>If Floorp opened on this page with the SelectKit icon in the toolbar, the extension is loaded.</p>
-    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.5.0 loaded”.</p>
+    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.6.0 loaded”.</p>
   </section>
 
   <section id="phase-1">
@@ -167,6 +167,39 @@
     <p><b>Not measurements</b> (no conversion):
       5 friends · in 2024 · 5 in a row · 21st century · the 1st place · the 90's · 5G network ·
       10 minutes · 25 pts · Room 5 · version 2.0 · A4 paper · 100% · Vitamin C · Grade 5 C students</p>
+  </section>
+
+  <section id="phase-6">
+    <h2>Phase 6 — Currency with live rates</h2>
+    <ol>
+      <li>Settings → Currency shows “Exchange rates haven't been downloaded yet”.</li>
+      <li>Select a price below → popup shows e.g. <b>50 lei (RON) ≈ €9.35</b>. The very first time it may appear a moment after the popup (rates downloading). Hover it → tooltip shows the rates' date. Click → copied.</li>
+      <li>Settings again → “Rates: ECB …, exchange-api …. Downloaded today; updated weekly.” Click <b>Refresh now</b> → still today, no error.</li>
+      <li>Ambiguous symbols (<code>$</code>, <code>kr</code>, <code>£</code>, <code>¥</code>, <code>Rs</code>, <code>lei</code>) get a grey <b>USD ⇄</b> button → click it → switches to the next likely currency and the result updates. The choice is kept for that symbol on this page.</li>
+      <li>Settings → Convert prices to USD / RON / BGN → next selection uses it. EUR prices show nothing while the target is EUR.</li>
+    </ol>
+
+    <ul>
+      <li>Symbols: $19.99 · £5 · ¥1,200 · € 5 · ₹1,23,456 · ₩50,000 · ₺250 · R$ 99,90 · 150 zł · 299 Kč · US$ 5 · CA$5</li>
+      <li>ISO codes: USD 40 · 40 USD · CHF 12.50 · VND 250000 · 40 TRY · AED 100</li>
+      <li>Same currency, different spelling: 50 RON · 50 lei · 50 Lei · lei 50 · 12 BGN · 12 лв · 12лв. · 12 лева · 100 UAH · 100 грн · ₴100 · 250 TL · 100 евро</li>
+      <li>Number formats: 1.299,00 лв · 12,50 лв. · $1,234.56 · 1.234,56 € · 1 234,56 € · CHF 1'234.56 · $5k · $1.2 million</li>
+      <li>Several at once: It costs $20 here, 18 € in Paris and 95 lei in Bucharest.</li>
+      <li>Select just the price (lower-case code): <span>ron 50</span> · <span>50ron</span> · <span>try 40</span></li>
+    </ul>
+
+    <p><b>Page country decides ambiguous symbols</b> (each line has its own <code>lang</code>):</p>
+    <ul>
+      <li lang="en-CA">Canada (en-CA): a coffee is $4.50 → CAD</li>
+      <li lang="en-AU">Australia (en-AU): a coffee is $5 → AUD</li>
+      <li lang="es-MX">México (es-MX): un café cuesta $45 → MXN</li>
+      <li lang="nb-NO">Norge (nb-NO): en kaffe koster 45 kr → NOK</li>
+      <li lang="da-DK">Danmark (da-DK): en kaffe koster 35 kr. → DKK</li>
+      <li lang="ro-MD">Moldova (ro-MD): o cafea costă 30 lei → MDL</li>
+      <li lang="ur-PK">Pakistan (ur-PK): Rs 500 → PKR</li>
+    </ul>
+
+    <p><b>Not prices</b> (no currency result): TL;DR · lv 5 armor · Ft. Worth · 5 L of water · 5 KM away · 100% sure · give it 5 try more · we have 10 cup cakes · Room 101</p>
   </section>
 
   <section id="bottom">

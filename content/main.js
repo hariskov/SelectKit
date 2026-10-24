@@ -83,8 +83,7 @@ document.addEventListener("selectionchange", () => {
 window.addEventListener("scroll", () => popup.hide(), { passive: true, capture: true });
 window.addEventListener("resize", () => popup.hide());
 
-// From the context menu and the keyboard shortcut. Only the frame that has
-// a selection answers.
+// From the context menu. Only the frame that has a selection answers.
 browser.runtime.onMessage.addListener((msg) => {
   if (msg.type !== "translate-selection") return;
   const text = selectedText();

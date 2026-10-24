@@ -55,13 +55,5 @@
   "icons": {
     "48": "icons/icon.svg",
     "96": "icons/icon.svg"
-  },
-  "commands": {
-    "translate-selection": {
-      "suggested_key": {
-        "default": "Alt+Shift+T"
-      },
-      "description": "Translate the selected text in Google Translate"
-    }
   }
 }

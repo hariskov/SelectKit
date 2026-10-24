@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SelectKit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Completes selections to whole words, sends text to Google Translate, converts prices and units.",
   "browser_specific_settings": {
     "gecko": {
@@ -15,13 +15,27 @@
     }
   },
   "permissions": [
-    "storage"
+    "storage",
+    "clipboardWrite"
   ],
   "background": {
     "scripts": [
       "background.js"
     ]
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content/popup.js",
+        "content/main.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
   "action": {
     "default_title": "SelectKit",
     "default_icon": "icons/icon.svg",

@@ -46,13 +46,15 @@ Shadow-DOM popup appears after any text selection, next to the cursor, with a
 single **Copy** button.
 
 Test:
-- [ ] Select text on the playground and on 3 real sites (Wikipedia, GitHub, a news site) → popup appears at the mouse
-- [ ] Copy puts the text on the clipboard
-- [ ] Hides on Esc, scroll, click outside, and when the selection is cleared
-- [ ] Near the right/bottom edge it stays inside the window
-- [ ] Clicking the popup doesn't lose the page selection
-- [ ] Page CSS doesn't change its look (playground "hostile CSS" section)
-- [ ] Works inside an iframe
+- [x] Select text on the playground and on 3 real sites (Wikipedia, GitHub, a news site) → popup appears at the mouse
+- [x] Copy puts the text on the clipboard
+- [x] Hides on Esc, scroll, click outside, and when the selection is cleared
+- [x] Near the right/bottom edge it stays inside the window
+- [x] Clicking the popup doesn't lose the page selection
+- [x] Page CSS doesn't change its look (playground "hostile CSS" section)
+- [x] Works inside an iframe
+- [x] Double-click and triple-click also show it
+- [x] Selecting inside an input/textarea shows no popup
 
 ## Phase 3 — Translate in a new tab
 **Translate → EN/BG** button, right-click menu entry, `Alt+Shift+T`.

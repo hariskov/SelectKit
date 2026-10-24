@@ -8,6 +8,14 @@
     section { border-top: 1px solid #ccc; padding: 0.5rem 0 1rem; }
     h2 { font-size: 1.1rem; }
     .hint { color: #777; font-size: 0.9rem; }
+    iframe { width: 100%; height: 110px; border: 1px dashed #999; }
+    #tall { height: 1400px; background: linear-gradient(#fff0, #eef); }
+    .right { text-align: right; }
+
+    /* Hostile CSS: a page trying hard to break injected UI. */
+    #hostile * { font-family: "Comic Sans MS", cursive !important; color: crimson !important; }
+    #hostile ~ * button, button { background: hotpink !important; font-size: 30px !important; }
+    selectkit-popup, div[class] { display: none !important; transform: scale(3) !important; }
   </style>
 </head>
 <body>
@@ -17,7 +25,7 @@
   <section id="phase-0">
     <h2>Phase 0 — Skeleton</h2>
     <p>If Floorp opened on this page with the SelectKit icon in the toolbar, the extension is loaded.</p>
-    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.1.0 loaded”.</p>
+    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.2.0 loaded”.</p>
   </section>
 
   <section id="phase-1">
@@ -30,6 +38,36 @@
       <li>Change a few values, then <code>about:debugging</code> → SelectKit → Reload, reopen settings → values kept.</li>
       <li>Switch the system between light and dark → page stays readable.</li>
     </ol>
+  </section>
+
+  <section id="phase-2">
+    <h2>Phase 2 — Popup at the mouse (Copy only)</h2>
+    <ol>
+      <li>Select any part of this sentence with the mouse → a dark popup with <b>Copy</b> appears just below-right of the cursor.</li>
+      <li>Click <b>Copy</b> → it says “Copied” and closes; paste somewhere to check the text. The selection on the page stays.</li>
+      <li>Select again, then close the popup each way: <b>Esc</b>, scrolling, clicking elsewhere on the page.</li>
+      <li>Double-click a word and triple-click a paragraph → popup appears both times.</li>
+      <li>Select text in each of these → no popup (text fields and editors are left alone):
+        <input value="select me in the input">
+        <textarea rows="1">select me in the textarea</textarea>
+        <span contenteditable="true" style="border: 1px dashed #999; padding: 0 4px;">select me in the editable span</span></li>
+      <li>Select text in a field, then select normal page text → the popup appears again for the page text.</li>
+    </ol>
+
+    <p class="right">Select this right-aligned text near the edge of the window → the popup stays fully inside the window.</p>
+
+    <div id="hostile">
+      <p><b>Hostile CSS:</b> this page has rules that set every button to hot pink 30px, every div with a class to hidden, and Comic Sans on this block.
+      Select this text → the popup must look exactly like everywhere else.</p>
+    </div>
+
+    <p><b>Iframe:</b> select text inside the frame below → popup appears inside the frame.</p>
+    <iframe src="frame.html" title="test frame"></iframe>
+
+    <p>Other languages: 日本語のテキストを選択してください。 Изберете този текст на български. اختر هذا النص.</p>
+
+    <div id="tall"></div>
+    <p><b>Bottom of the page:</b> scroll down here and select this text near the bottom of the window → the popup opens above the cursor instead of below.</p>
   </section>
 </body>
 </html>

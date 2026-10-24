@@ -17,7 +17,19 @@
   <section id="phase-0">
     <h2>Phase 0 — Skeleton</h2>
     <p>If Floorp opened on this page with the SelectKit icon in the toolbar, the extension is loaded.</p>
-    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.0.1 loaded”.</p>
+    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.1.0 loaded”.</p>
+  </section>
+
+  <section id="phase-1">
+    <h2>Phase 1 — Settings</h2>
+    <ol>
+      <li>Click the SelectKit toolbar icon → settings open in a new tab.</li>
+      <li>Defaults: English · EUR · Word wrapper on.</li>
+      <li>“Convert prices to” is a dropdown with EUR, USD, RON and BGN.</li>
+      <li>Every change shows “Saved” top right.</li>
+      <li>Change a few values, then <code>about:debugging</code> → SelectKit → Reload, reopen settings → values kept.</li>
+      <li>Switch the system between light and dark → page stays readable.</li>
+    </ol>
   </section>
 </body>
 </html>

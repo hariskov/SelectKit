@@ -26,18 +26,20 @@ Manifest, icon, empty background script, `test/playground.html`, `package.json`
 with `run` / `lint` / `test` scripts.
 
 Test:
-- [ ] `npm run start` opens Floorp with the extension loaded
-- [ ] Icon shows in the toolbar; no errors in `about:debugging` → Inspect
-- [ ] `npm run lint` is clean
+- [x] `npm run start` opens Floorp with the extension loaded
+- [x] Icon shows in the toolbar; no errors in `about:debugging` → Inspect
+- [x] `npm run lint` is clean
 
 ## Phase 1 — Settings
-Options page: translate target (EN/BG), target currency, `$`/`¥` meaning,
-"complete words" toggle. Toolbar icon opens it.
+Options page: translate target (EN/BG), target currency (dropdown: EUR, USD, RON,
+BGN), "Word wrapper" toggle. Toolbar icon opens it.
 
 Test:
-- [ ] Clicking the icon opens settings; defaults are EN / EUR / USD / JPY / on
-- [ ] Changed values are still there after reloading the extension
-- [ ] Settings page is usable in dark mode
+- [x] Clicking the icon opens settings in a tab; defaults are EN / EUR / Word wrapper on
+- [x] Target currency dropdown offers exactly EUR, USD, RON, BGN
+- [x] Every change shows "Saved"
+- [x] Changed values are still there after reloading the extension (about:debugging → Reload)
+- [x] Settings page is readable in both light and dark mode
 
 ## Phase 2 — Popup at the mouse (Copy only)
 Shadow-DOM popup appears after any text selection, next to the cursor, with a
@@ -65,7 +67,7 @@ Test:
 - [ ] Text with `&`, `#`, `?`, newlines and emoji arrives intact
 - [ ] Unit tests for truncation pass
 
-## Phase 4 — Word completion
+## Phase 4 — Word wrapper
 Partly selected words at either edge get selected in full.
 
 Test:
@@ -102,13 +104,13 @@ Test:
 - [ ] Any ISO code: `VND 250000`, `40 TRY`, `AED 100`
 - [ ] Symbol and ISO code give the same result: `50 RON` = `50 lei` = `50 Lei`; `12 BGN` = `12 лв` = `12лв.` = `12 лева`; `100 UAH` = `100 грн` = `₴100`
 - [ ] Codes match in any case and on either side: `ron 50`, `50ron`, `lei 50`
-- [ ] Popup names the assumed currency: `50 lei (RON) ≈ … €`
-- [ ] `lei` = MDL setting → `50 lei (MDL)`
+- [ ] Popup names the assumed currency: `50 lei (RON) ≈ … €`, `$20 (USD) ≈ … €`
+- [ ] Ambiguous symbol resolved from the page: `$20` on a page with `lang="en-CA"` → CAD; on a `.com.au` site → AUD; `kr` on a `lang="nb"` page → NOK
+- [ ] Clicking the assumed currency in the popup lets you pick another one (e.g. `$` → MXN)
 - [ ] `1.299,00 лв` and `12,50 лв.` → EUR via the fixed rate
 - [ ] `1,234.56`, `1.234,56`, `1 234,56` and `1'234.56` all parse correctly
-- [ ] `$`, `¥`, `kr`, `lei` and `Rs` follow the settings (e.g. `$` = CAD)
 - [ ] Words that only look like aliases don't trigger: `TL;DR`, `lv 5 armor`, `Ft. Worth` (no number next to them, or a clearly non-price context)
-- [ ] Change target currency to USD → results switch to USD, no reload needed
+- [ ] Change target currency to USD, RON or BGN → results switch, no reload needed
 - [ ] Prices already in the target currency show no conversion
 - [ ] Unit tests for the price parser pass
 
@@ -116,7 +118,6 @@ Test:
 Background fetches ECB rates from `api.frankfurter.app` at most once a day,
 with `fawazahmed0/exchange-api` as the fallback for currencies the ECB doesn't
 cover. Cached in `storage.local`; the result shows the rate date and source.
-The settings page's target-currency list is filled from the available rates.
 
 Test:
 - [ ] First conversion fetches rates; later ones within the day don't (Network tab)

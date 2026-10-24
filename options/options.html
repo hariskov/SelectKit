@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SelectKit settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <header>
+      <img src="../icons/icon.svg" alt="" width="32" height="32">
+      <h1>SelectKit</h1>
+      <span id="status" role="status"></span>
+    </header>
+
+    <section>
+      <h2>Translation</h2>
+      <p class="hint">Any language is detected automatically. Choose what to translate into.</p>
+      <div id="targetLang" class="choices"></div>
+    </section>
+
+    <section>
+      <h2>Currency</h2>
+      <label class="row">
+        <span>Convert prices to</span>
+        <select id="targetCurrency"></select>
+      </label>
+      <p class="hint">Prices in any currency are converted to this one. Symbols like $ or kr are matched to the right currency from the page they're on.</p>
+    </section>
+
+    <section>
+      <h2>Selection</h2>
+      <label class="check">
+        <input type="checkbox" id="wordWrapper">
+        <span>Word wrapper</span>
+      </label>
+    </section>
+  </main>
+
+  <script src="../lib/settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

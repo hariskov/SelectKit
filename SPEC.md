@@ -5,7 +5,7 @@ text to Google Translate, and converts prices and units.
 
 Target browser: Floorp 12+ (Firefox-based, WebExtensions, Manifest V3).
 
-## F1 — Selection completion
+## F1 — Word wrapper (selection completion)
 
 When a mouse selection ends, every word the selection touches is selected in
 full. Selecting `ect all wor` in "select all words" becomes `select all words`.
@@ -40,10 +40,14 @@ https://translate.google.com/?sl=auto&tl=<target>&text=<selection>&op=translate
 The popup shows a conversion result when the selection is a price or a
 measurement.
 
-### Currency: any currency → target currency (default EUR, set in settings)
+### Currency: any currency → EUR, USD, RON or BGN (default EUR)
 - **Source: any currency, written any common way.** Each currency is
-  recognised by its ISO 4217 code *and* its local symbols/names. These all
-  mean the same currency:
+  recognised by its ISO 4217 code *and* its symbols/local names. Codes come
+  from ISO 4217; symbols come from Unicode CLDR (the data behind the browser's
+  `Intl` API), read at runtime, so the list doesn't have to be kept by hand.
+  CLDR misses some everyday forms (`лв`/`лева`, `грн`, `lei` for MDL), so a
+  short list of extra names lives in `lib/currencies.js`. These all mean the
+  same currency:
 
   | Currency | Recognised as |
   |---|---|
@@ -62,17 +66,21 @@ measurement.
   | INR | `INR`, `₹`, `Rs`* |
   | … | every other ISO code, plus `£ ¥ ₩ ₽ ₪ ₫ ₱ ฿ R$ C$ A$ HK$ CHF kr RM Rp` |
 
-  The alias table lives in one data file (`lib/currencies.js`), so adding a
-  missing name is a one-line change.
 - Codes and names match case-insensitively (`ron`, `Lei`, `ЛВ`), before or
   after the number, with or without a space (`12лв`, `lei 50`, `50 RON`).
-- `*` = ambiguous; see the settings below.
-- **Target: any currency** from the rates list; EUR is the default.
+- `*` = ambiguous: the same symbol is used by several currencies (in CLDR,
+  `$` is used by 29 currencies, `£` by 6, `kr` and `Rs` by 4 each).
+- **Target:** EUR (default), USD, RON or BGN, chosen in the settings. The
+  list is one constant (`TARGET_CURRENCIES`), so adding more later is easy.
 - Number parsing handles `1,234.56`, `1.234,56`, `1 234,56`, `1'234.56` and
   Indian grouping `1,23,456`.
-- Ambiguous symbols use a setting: `$` → USD, `¥` → JPY, `kr` → SEK,
-  `lei` → RON (vs MDL), `Rs` → INR (vs PKR, LKR, NPR) by default. The popup
-  shows which currency it assumed, e.g. "50 lei (RON) ≈ 10.05 €".
+- Ambiguous symbols are resolved automatically, with no settings:
+  1. the page's language/region: `<html lang="en-CA">` → `$` = CAD
+  2. the site's country domain: `.com.au` → AUD, `.no` → `kr` = NOK
+  3. otherwise the most widely used currency for that symbol
+     (`$` USD, `£` GBP, `¥` JPY, `kr` SEK, `Rs` INR, `lei` RON)
+- The popup shows which currency it assumed, e.g. "$19.99 (CAD) ≈ 13.20 €".
+  Clicking the currency lets you pick another one for that selection.
 - Rates, fetched at most once a day and cached in `storage.local`; the result
   shows the rate date:
   1. ECB reference rates via `api.frankfurter.app` (official, ~30 major currencies)
@@ -100,13 +108,8 @@ measurement.
 | Setting | Values | Default |
 |---|---|---|
 | Translation target | English / Bulgarian | English |
-| Target currency | any supported currency (searchable list) | EUR |
-| `$` means | USD, CAD, AUD, NZD, MXN, … | USD |
-| `¥` means | JPY / CNY | JPY |
-| `kr` means | SEK / NOK / DKK / ISK | SEK |
-| `lei` means | RON / MDL | RON |
-| `Rs` means | INR / PKR / LKR / NPR | INR |
-| Complete words on selection | on / off | on |
+| Target currency | EUR / USD / RON / BGN | EUR |
+| Word wrapper | on / off | on |
 
 ## Non-goals (v1)
 

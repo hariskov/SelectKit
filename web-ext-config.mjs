@@ -6,5 +6,6 @@ export default {
     "web-ext-config.mjs",
     "SPEC.md",
     "PLAN.md",
+    "README.md",
   ],
 };

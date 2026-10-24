@@ -128,6 +128,15 @@ If a value is already in the preferred unit, nothing is shown.
 - Contents: `Translate → EN|BG`, conversion result (when detected), `Copy`.
 - Closes on Esc, scroll, or a click outside it.
 - Rendered inside a Shadow DOM so page CSS can't affect it.
+- Follows the system light/dark theme.
+- Appears after the "Popup delay" setting (default 0 ms: immediately); a new
+  click or drag before then cancels it.
+
+## F4b — Toolbar panel
+
+Clicking the toolbar icon opens a small About panel: name, version and
+release date, the exchange rates' date, a Settings button and a link to the
+GitHub repository. Sites are switched off in the settings, not here.
 
 ## F5 — Settings (options page)
 
@@ -136,6 +145,8 @@ If a value is already in the preferred unit, nothing is shown.
 | Translation target | English / Bulgarian | English |
 | Target currency | EUR / USD / RON / BGN | EUR |
 | Word wrapper | on / off | on |
+| Popup delay | 0–2000 ms | 0 |
+| Sites switched off | list of sites, add/remove | none |
 | Length | metric / imperial | metric |
 | Weight | kg / lb / st & lb | kg |
 | Temperature | °C / °F | °C |

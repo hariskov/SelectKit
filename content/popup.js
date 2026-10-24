@@ -4,7 +4,27 @@
 // hide or move it either.
 
 const POPUP_CSS = `
-  :host { all: initial; }
+  :host {
+    all: initial;
+    --bg: #ffffff;
+    --text: #1f2328;
+    --hover: #eef1f4;
+    --line: #d0d7de;
+    --result: #0b57d0;
+    --muted: #656d76;
+    --shadow: rgba(31, 35, 40, 0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :host {
+      --bg: #1f2328;
+      --text: #f0f2f4;
+      --hover: #3a4048;
+      --line: #3a4048;
+      --result: #8ab4ff;
+      --muted: #9aa4ae;
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+  }
   .popup {
     position: fixed;
     display: none;
@@ -12,10 +32,11 @@ const POPUP_CSS = `
     gap: 2px;
     padding: 3px;
     border-radius: 8px;
-    background: #1f2328;
-    color: #f0f2f4;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--line);
     font: 13px/1.2 system-ui, sans-serif;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 14px var(--shadow);
     user-select: none;
     white-space: nowrap;
     flex-wrap: wrap;
@@ -28,10 +49,10 @@ const POPUP_CSS = `
     padding: 5px 9px;
     border-radius: 5px;
   }
-  button:hover, button:focus-visible { background: #3a4048; }
-  button.result { color: #8ab4ff; font-weight: 600; }
-  button.switch { color: #9aa4ae; font-size: 12px; }
-  .sep { width: 1px; align-self: stretch; margin: 3px 1px; background: #3a4048; }
+  button:hover, button:focus-visible { background: var(--hover); }
+  button.result { color: var(--result); font-weight: 600; }
+  button.switch { color: var(--muted); font-size: 12px; }
+  .sep { width: 1px; align-self: stretch; margin: 3px 1px; background: var(--line); }
 `;
 
 const HOST_STYLE = [

@@ -1,19 +1,45 @@
 # SelectKit
 
-A [Floorp](https://floorp.app) / Firefox extension that helps with selected text:
+A [Floorp](https://floorp.app) / Firefox extension that helps with selected
+text. Select something and a small popup appears next to the cursor.
 
 - **Word wrapper:** partly selected words get selected in full
   (`ect all wor` → `select all words`), in any language.
-- **Translates:** a popup next to the cursor opens the selection in Google
-  Translate, in a new tab. Any source language; target is English or Bulgarian.
-- **Converts:** prices in any currency (`$19.99`, `50 lei`, `12 лв`, `VND 250000`)
-  to EUR, USD, RON or BGN, and measurements (length, weight, temperature,
-  volume, speed, fuel economy incl. mpg ↔ L/100 km) to your preferred units:
-  metric, US or UK, set per kind of measurement.
+- **Translate:** opens the selection in Google Translate in a new tab. Any
+  source language; translates to English or Bulgarian.
+- **Prices:** any currency (`$19.99`, `50 lei`, `12 лв`, `VND 250000`) converted
+  to EUR, USD, RON or BGN with current exchange rates. Ambiguous symbols like
+  `$` or `kr` are matched to the page's country, and you can switch them.
+- **Measurements:** length, weight, temperature, volume, speed and fuel
+  economy (mpg ↔ L/100 km) converted to your units: metric, US or UK, set per
+  kind of measurement.
+- **Copy:** copies the selection, or a converted value with one click.
 
-> **Status:** early development, built in phases (see [PLAN.md](PLAN.md)).
-> All features are in (phases 0–6): Word wrapper, translation, unit and currency conversion. Next: polish, then a signed install. Not usable for
-> everyday browsing yet.
+The toolbar icon shows the version and opens the settings, where sites can
+also be switched off.
+
+**Version 1.0.0.** How it was built, phase by phase: [PLAN.md](PLAN.md). What
+it does in detail: [SPEC.md](SPEC.md).
+
+## Install
+
+Until it's signed by Mozilla, load it as a temporary add-on (it stays until
+Floorp restarts):
+
+1. Download or clone this repository.
+2. Open `about:debugging#/runtime/this-firefox`.
+3. **Load Temporary Add-on…** → choose `manifest.json`.
+
+## Settings
+
+| Setting | Default |
+|---|---|
+| Translate to | English (or Bulgarian) |
+| Convert prices to | EUR (or USD, RON, BGN) |
+| Units | Metric; one-click US or UK presets, or per kind of measurement |
+| Word wrapper | on |
+| Popup delay | 0 ms |
+| Sites switched off | none |
 
 ## Development
 
@@ -45,7 +71,8 @@ To try it in your normal Floorp instead: `about:debugging` → *This Floorp* →
 
 ```
 manifest.json        extension manifest (MV3)
-background.js        background script
+background.js        background script: translate tabs, exchange rates
+panel/               toolbar panel: on/off for the current site
 content/             content scripts: popup at the mouse, Word wrapper
 test/*.test.js       unit tests (npm test)
 lib/settings.js      settings defaults and storage helpers
@@ -68,7 +95,8 @@ PLAN.md              phases and their test checklists
 
 SelectKit collects nothing. Text is only sent to Google Translate when you
 click *Translate*, and exchange rates are fetched from public rate services
-(ECB via Frankfurter, and exchange-api).
+(ECB via Frankfurter, and exchange-api) about once a week. Settings are kept
+in the browser's extension storage, which follows Firefox Sync if you use it.
 
 ## License
 

@@ -129,10 +129,75 @@ function renderWordWrapper(current) {
   box.addEventListener("change", () => save("wordWrapper", box.checked));
 }
 
+function renderPopupDelay(current) {
+  const input = document.getElementById("popupDelay");
+  input.value = current;
+  input.addEventListener("change", () => {
+    const value = Math.min(MAX_POPUP_DELAY, Math.max(0, Math.round(Number(input.value) || 0)));
+    input.value = value;
+    save("popupDelay", value);
+  });
+}
+
+// --- Sites ---
+
+function renderSites(blockedSites) {
+  const list = document.getElementById("blockedSites");
+  list.replaceChildren();
+  if (!blockedSites.length) {
+    const empty = document.createElement("li");
+    empty.className = "empty";
+    empty.textContent = "No sites switched off.";
+    list.append(empty);
+    return;
+  }
+  for (const site of [...blockedSites].sort()) {
+    const item = document.createElement("li");
+    const name = document.createElement("span");
+    name.textContent = site;
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "Remove";
+    remove.addEventListener("click", async () => {
+      const { blockedSites: current } = await getSettings();
+      await save("blockedSites", current.filter((s) => s !== site));
+    });
+    item.append(name, remove);
+    list.append(item);
+  }
+}
+
+function setUpAddSite() {
+  const form = document.getElementById("addSite");
+  const input = document.getElementById("newSite");
+  const error = document.getElementById("siteError");
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const site = siteOf(input.value);
+    if (!site) {
+      error.textContent = `“${input.value}” isn't a site address.`;
+      error.hidden = false;
+      return;
+    }
+    error.hidden = true;
+    const { blockedSites } = await getSettings();
+    if (!blockedSites.includes(site)) await save("blockedSites", [...blockedSites, site]);
+    input.value = "";
+  });
+}
+
+// Keep the list current if it's changed in another settings tab.
+browser.storage.onChanged.addListener((changes, area) => {
+  if (area === "sync" && changes.blockedSites) renderSites(changes.blockedSites.newValue ?? []);
+});
+
 getSettings().then((settings) => {
   renderTargetLang(settings.targetLang);
   renderTargetCurrency(settings.targetCurrency);
   renderUnits(settings);
   renderRates();
   renderWordWrapper(settings.wordWrapper);
+  renderPopupDelay(settings.popupDelay);
+  renderSites(settings.blockedSites);
+  setUpAddSite();
 });

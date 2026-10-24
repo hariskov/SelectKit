@@ -25,7 +25,7 @@
   <section id="phase-0">
     <h2>Phase 0 — Skeleton</h2>
     <p>If Floorp opened on this page with the SelectKit icon in the toolbar, the extension is loaded.</p>
-    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.6.0 loaded”.</p>
+    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 1.0.0 loaded”.</p>
   </section>
 
   <section id="phase-1">
@@ -200,6 +200,17 @@
     </ul>
 
     <p><b>Not prices</b> (no currency result): TL;DR · lv 5 armor · Ft. Worth · 5 L of water · 5 KM away · 100% sure · give it 5 try more · we have 10 cup cakes · Room 101</p>
+  </section>
+
+  <section id="phase-7">
+    <h2>Phase 7 — Polish (1.0.0)</h2>
+    <ol>
+      <li><b>Theme:</b> switch the desktop between light and dark → the popup follows (no reload needed), and so do the toolbar panel and settings.</li>
+      <li><b>Toolbar icon</b> → About panel: “Version 1.0.0 · 2026-10-27”, the exchange rates' date, a <b>Settings</b> button and a GitHub link.</li>
+      <li>Settings → <b>Sites</b> → add <code>localhost</code> → select text here → no popup, and partial words aren't completed. <b>Remove</b> it → works again.</li>
+      <li>Settings → <b>Popup delay</b> 500 → the popup appears half a second after the selection; start another drag or click before then → no popup. Word wrapper still adjusts the selection immediately. Set it back to 0.</li>
+    </ol>
+    <p>Sample text: Select any part of this sentence to try the delay and the site switch.</p>
   </section>
 
   <section id="bottom">

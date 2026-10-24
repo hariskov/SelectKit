@@ -46,6 +46,22 @@
         <input type="checkbox" id="wordWrapper">
         <span>Word wrapper</span>
       </label>
+      <label class="row">
+        <span>Popup delay</span>
+        <input type="number" id="popupDelay" min="0" max="2000" step="50" inputmode="numeric"> ms
+      </label>
+      <p class="hint">0 shows the popup as soon as you finish selecting.</p>
+    </section>
+
+    <section>
+      <h2>Sites</h2>
+      <p class="hint">SelectKit does nothing on these sites (and their subdomains).</p>
+      <ul id="blockedSites" class="sites"></ul>
+      <form id="addSite" class="row">
+        <input id="newSite" placeholder="example.com" autocomplete="off" spellcheck="false">
+        <button type="submit">Add</button>
+      </form>
+      <p id="siteError" class="error" hidden></p>
     </section>
   </main>
 

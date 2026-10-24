@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SelectKit",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "Completes selections to whole words, sends text to Google Translate, converts prices and units.",
   "browser_specific_settings": {
     "gecko": {
@@ -50,7 +50,8 @@
   "action": {
     "default_title": "SelectKit",
     "default_icon": "icons/icon.svg",
-    "default_area": "navbar"
+    "default_area": "navbar",
+    "default_popup": "panel/panel.html"
   },
   "options_ui": {
     "page": "options/options.html",

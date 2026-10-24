@@ -1,7 +1,5 @@
 console.log(`SelectKit ${browser.runtime.getManifest().version} loaded`);
 
-browser.action.onClicked.addListener(() => browser.runtime.openOptionsPage());
-
 // --- Translate in a new tab ---
 
 async function openTranslateTab(text, sourceTab) {

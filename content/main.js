@@ -161,8 +161,15 @@ function buildActions(text) {
   ];
 }
 
+// The popup waiting for the "Popup delay" setting.
+let pendingShow = null;
+
+function siteIsOff() {
+  return !!blockingEntry(location.hostname || "localhost", settings.blockedSites);
+}
+
 document.addEventListener("mouseup", (event) => {
-  if (event.button !== 0 || popup.contains(event)) return;
+  if (event.button !== 0 || popup.contains(event) || siteIsOff()) return;
   if (inEditable(event)) {
     popup.hide();
     return;
@@ -177,13 +184,25 @@ document.addEventListener("mouseup", (event) => {
       popup.hide();
       return;
     }
-    current = { text, x: event.clientX, y: event.clientY };
-    render();
+    const show = () => {
+      current = { text, x: event.clientX, y: event.clientY };
+      render();
+    };
+    clearTimeout(pendingShow);
+    if (settings.popupDelay > 0) {
+      pendingShow = setTimeout(() => {
+        if (selectedText() === text) show();
+      }, settings.popupDelay);
+    } else {
+      show();
+    }
   }, 0);
 }, true);
 
 document.addEventListener("mousedown", (event) => {
-  if (!popup.contains(event)) popup.hide();
+  if (popup.contains(event)) return;
+  clearTimeout(pendingShow);
+  popup.hide();
 }, true);
 
 document.addEventListener("keydown", (event) => {

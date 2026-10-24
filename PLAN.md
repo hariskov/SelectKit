@@ -152,13 +152,23 @@ Test, conversion and rates:
 - [x] Unknown currency: no conversion instead of a wrong one
 - [x] Unit tests for detection and conversion pass
 
-## Phase 7 — Polish
-Dark/light popup that follows the system, a site blocklist in settings, a
-small delay so the popup doesn't flicker while dragging, an icon at all sizes.
+## Phase 7 — Polish → version 1.0.0
+- Popup follows the system light/dark theme.
+- "Don't use on this site": a Sites list in settings (add a site, Remove).
+  (A per-site switch in the toolbar panel was built, then dropped at the
+  user's request in favour of the list.)
+- Toolbar panel becomes an About box: version, release date, rates' date,
+  Settings button, GitHub link.
+- Popup delay setting in milliseconds, default 0 (immediate, as before).
+- Version 1.0.0, README for users. (The icon stays as it is.)
 
 Test:
-- [ ] One full day of normal browsing without the popup getting in the way
-- [ ] Blocklisted site → no popup, no snapping
+- [x] Popup is light with a light system theme, dark with a dark one; switches without reloading
+- [x] Settings → Sites: add a site → no popup and no Word wrapper there (after the next selection, no reload); Remove → works again
+- [x] Subdomains follow: `example.com` also covers `www.example.com`
+- [x] Toolbar icon → About panel: version 1.0.0 and date, rates' date, Settings button, GitHub link
+- [x] Popup delay 0 → immediate; 500 → appears half a second later; starting a new drag or click before then cancels it
+- [x] Word wrapper still adjusts the selection immediately, whatever the delay
 
 ## Phase 8 — Permanent install
 Sign as **unlisted** on addons.mozilla.org (`web-ext sign --channel=unlisted`,

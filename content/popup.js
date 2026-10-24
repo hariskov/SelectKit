@@ -18,6 +18,8 @@ const POPUP_CSS = `
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
     user-select: none;
     white-space: nowrap;
+    flex-wrap: wrap;
+    max-width: calc(100vw - 16px);
   }
   .popup.open { display: flex; }
   button {
@@ -27,6 +29,7 @@ const POPUP_CSS = `
     border-radius: 5px;
   }
   button:hover, button:focus-visible { background: #3a4048; }
+  button.result { color: #8ab4ff; font-weight: 600; }
   .sep { width: 1px; align-self: stretch; margin: 3px 1px; background: #3a4048; }
 `;
 
@@ -64,7 +67,7 @@ class SelectionPopup {
     return !!this.box && this.box.classList.contains("open");
   }
 
-  // actions: [{ label, title?, onClick(button) }]
+  // actions: [{ label, title?, className?, onClick(button) }]
   show(clientX, clientY, actions) {
     this.mount();
     this.box.replaceChildren();
@@ -77,6 +80,7 @@ class SelectionPopup {
       const button = document.createElement("button");
       button.textContent = action.label;
       if (action.title) button.title = action.title;
+      if (action.className) button.className = action.className;
       button.addEventListener("click", (e) => {
         e.stopPropagation();
         action.onClick(button);

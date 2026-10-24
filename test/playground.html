@@ -25,7 +25,7 @@
   <section id="phase-0">
     <h2>Phase 0 — Skeleton</h2>
     <p>If Floorp opened on this page with the SelectKit icon in the toolbar, the extension is loaded.</p>
-    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.4.0 loaded”.</p>
+    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.5.0 loaded”.</p>
   </section>
 
   <section id="phase-1">
@@ -124,6 +124,49 @@
       <li>Split by markup: an im<b>port</b>ant w<i>ord</i> sp<a href="#phase-4">lit</a>ting test → dragging from “port” to “ord” selects <b>important word</b>.</li>
       <li>Numbers: the price is 1,299.50 today → dragging over “299.5” selects <b>1,299.50</b>.</li>
     </ul>
+  </section>
+
+  <section id="phase-5">
+    <h2>Phase 5 — Unit conversion</h2>
+    <ol>
+      <li>Settings → Units: six dropdowns, defaults all metric, <b>Metric</b> button shown pressed.</li>
+      <li>Select a measurement below → the popup starts with the converted value in blue (e.g. <b>≈ 180 cm</b>), then Translate and Copy. Click the value → it's copied.</li>
+      <li>Values already in your units (metric list) → no conversion shown.</li>
+      <li>Click <b>US</b>, then <b>UK</b> in settings → select the metric list → converted to those units, no reload needed. Change one dropdown → no preset is pressed. Click <b>Metric</b> again at the end.</li>
+      <li>Ordinary text → no conversion.</li>
+    </ol>
+
+    <p><b>Imperial / US</b> (select each on its own, and also whole lines):</p>
+    <ul>
+      <li>He is 5 ft 11 in tall. She is 6'2". The shelf is 5 feet 11 inches.</li>
+      <li>We ran 3 miles, then a 26.2 mi marathon. A 27" monitor, 12 inches wide, 10 yd away.</li>
+      <li>He weighs 180 lb (180 lbs, 180 pounds) or 11 st 4 lb. Add 8 oz of flour; the baby was 7 lb 4 oz.</li>
+      <li>It's 72°F today, 72 F, and -40 °F at night. It was 100 degrees Fahrenheit.</li>
+      <li>Buy 1 gallon of milk and 12 fl oz of juice, 2 pints of cream.</li>
+      <li>Speed limit 60 mph (60 miles per hour). The car does 35 mpg.</li>
+      <li>Several at once: He is 6 ft 2 in tall, weighs 180 lb and ran 3 miles.</li>
+    </ul>
+
+    <p><b>Metric</b> (nothing shown with metric settings; converted with US / UK):</p>
+    <ul>
+      <li>He is 180 cm tall and weighs 80 kg. 250 g of butter, 500 ml of water, 3.79 L.</li>
+      <li>It's 20 °C outside. The road is 5 km long; drive at 100 km/h.</li>
+      <li>The car uses 6.7 L/100 km (or 5 l/100km); that's 20 km/L.</li>
+    </ul>
+
+    <div lang="en-GB">
+      <p><b>British text</b> (<code>lang="en-GB"</code>: gallons, pints and mpg are UK sizes, and the result says “(UK)”):</p>
+      <p>The car does 35 mpg. A pint is 1 pint, a 1 gallon can.</p>
+    </div>
+
+    <div lang="de">
+      <p><b>German text</b> (<code>lang="de"</code>: comma decimals, “1.500” means fifteen hundred) — with US settings:</p>
+      <p>Die Strecke ist 2,5 km lang, der Berg 1.500 m hoch, es sind 1.234,5 km bis Rom.</p>
+    </div>
+
+    <p><b>Not measurements</b> (no conversion):
+      5 friends · in 2024 · 5 in a row · 21st century · the 1st place · the 90's · 5G network ·
+      10 minutes · 25 pts · Room 5 · version 2.0 · A4 paper · 100% · Vitamin C · Grade 5 C students</p>
   </section>
 
   <section id="bottom">

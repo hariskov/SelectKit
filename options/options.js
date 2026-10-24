@@ -43,6 +43,55 @@ function renderTargetCurrency(current) {
   select.addEventListener("change", () => save("targetCurrency", select.value));
 }
 
+// --- Units ---
+
+function renderUnits(settings) {
+  const presetBox = document.getElementById("unitPresets");
+  const prefBox = document.getElementById("unitPrefs");
+  const selects = {};
+
+  // A preset button is shown pressed while every unit matches it.
+  const presetButtons = {};
+  function markPreset() {
+    for (const [name, values] of Object.entries(UNIT_PRESETS)) {
+      const matches = Object.entries(values).every(([key, value]) => selects[key].value === value);
+      presetButtons[name].setAttribute("aria-pressed", String(matches));
+    }
+  }
+
+  for (const { key, label, choices } of UNIT_PREFERENCES) {
+    const row = document.createElement("label");
+    row.className = "row";
+    const name = document.createElement("span");
+    name.textContent = label;
+    const select = document.createElement("select");
+    for (const [value, text] of Object.entries(choices)) select.add(new Option(text, value));
+    select.value = settings[key];
+    select.addEventListener("change", async () => {
+      await save(key, select.value);
+      markPreset();
+    });
+    selects[key] = select;
+    row.append(name, select);
+    prefBox.append(row);
+  }
+
+  for (const [name, values] of Object.entries(UNIT_PRESETS)) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = name;
+    button.addEventListener("click", async () => {
+      for (const [key, value] of Object.entries(values)) selects[key].value = value;
+      await saveSettings(values);
+      showSaved();
+      markPreset();
+    });
+    presetButtons[name] = button;
+    presetBox.append(button);
+  }
+  markPreset();
+}
+
 // --- Selection ---
 
 function renderWordWrapper(current) {
@@ -54,5 +103,6 @@ function renderWordWrapper(current) {
 getSettings().then((settings) => {
   renderTargetLang(settings.targetLang);
   renderTargetCurrency(settings.targetCurrency);
+  renderUnits(settings);
   renderWordWrapper(settings.wordWrapper);
 });

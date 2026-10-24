@@ -60,6 +60,19 @@ h2 { font-size: 1.05rem; margin: 0 0 8px; }
 .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 6px 0; }
 .row > span:first-child { min-width: 140px; }
 
+.presets { margin-bottom: 10px; }
+.presets button {
+  font: inherit;
+  color: inherit;
+  background: var(--bg);
+  padding: 4px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.presets button:hover { border-color: var(--accent); }
+.presets button[aria-pressed="true"] { border-color: var(--accent); outline: 1px solid var(--accent); }
+
 input, select {
   font: inherit;
   color: inherit;

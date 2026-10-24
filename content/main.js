@@ -20,6 +20,45 @@ function inEditable(event) {
     (el.closest("input, textarea, select") || el.isContentEditable));
 }
 
+// Language and region of the selected text: the nearest lang attribute,
+// so a British quote on another page still counts as British.
+function selectionContext() {
+  const node = window.getSelection().anchorNode;
+  const el = node && (node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement);
+  const lang = el?.closest("[lang]")?.lang || document.documentElement.lang || "";
+  const region = (lang.split(/[-_]/)[1] || "").toUpperCase();
+  const uk = region === "GB" || /\.uk$/.test(location.hostname);
+  return { uk, decimalComma: usesDecimalComma(lang) };
+}
+
+const MAX_CONVERSIONS = 3;
+// Longer selections are prose, not measurements worth converting.
+const MAX_CONVERSION_TEXT = 300;
+
+function conversionActions(text) {
+  if (text.length > MAX_CONVERSION_TEXT) return [];
+  const prefs = unitPrefs(settings);
+  const results = findMeasurements(text, selectionContext())
+    .map((found) => ({ found, out: convertMeasurement(found, prefs) }))
+    .filter(({ out }) => out)
+    .slice(0, MAX_CONVERSIONS);
+
+  return results.map(({ found, out }) => {
+    const source = found.note ? `${found.text} (${found.note})` : found.text;
+    const showSource = results.length > 1 || found.note;
+    return {
+      label: showSource ? `${source} ≈ ${out}` : `≈ ${out}`,
+      title: `Copy “${out}”`,
+      className: "result",
+      onClick: async (button) => {
+        await navigator.clipboard.writeText(out);
+        button.textContent = "Copied";
+        setTimeout(() => popup.hide(), 600);
+      },
+    };
+  });
+}
+
 async function translate(text) {
   if (fitForTranslate(text).truncated) {
     // Too long for the link: put the whole text on the clipboard as well.
@@ -30,6 +69,7 @@ async function translate(text) {
 
 function buildActions(text) {
   return [
+    ...conversionActions(text),
     {
       label: `Translate → ${settings.targetLang.toUpperCase()}`,
       title: "Open in Google Translate",

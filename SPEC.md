@@ -93,12 +93,31 @@ measurement.
 - BGN ↔ EUR uses the fixed rate 1.95583 (euro adopted 2026-01-01), no fetch.
 - If the price is already in the target currency, no conversion is shown.
 
-### Units → metric (local, no network)
-- Length: in, ft, yd, mi → cm / m / km
-- Mass: oz, lb, st (stone, incl. `11 st 4 lb`) → g / kg
-- Volume: fl oz, US gal → ml / l
-- Temperature: °F → °C
-- Speed: mph → km/h
+### Units → your preferred units (local, no network)
+Measurements are recognised in both metric and imperial/US units and
+converted to the unit chosen in the settings for that kind of measurement.
+If a value is already in the preferred unit, nothing is shown.
+
+| Kind | Recognised | Preference (default first) |
+|---|---|---|
+| Length | mm, cm, m, km, in, ft, yd, mi; `5 ft 11 in`, `5'11"` | metric · imperial |
+| Weight | g, kg, oz, lb, st; `11 st 4 lb`, `1 lb 4 oz` | kg · lb · st & lb |
+| Temperature | °C, °F (`72 F` only when that's the whole selection) | °C · °F |
+| Volume | ml, l, fl oz, pt, qt, gal | metric · US · UK |
+| Speed | km/h, mph | km/h · mph |
+| Fuel economy | L/100 km, km/L, mpg | L/100 km · US mpg · UK mpg · km/L |
+
+- The result picks a sensible size: `5 ft 11 in` → 180 cm, `3 miles` → 4.83 km,
+  `0.3 kg` → 10.6 oz.
+- US vs UK gallons (and pints, fl oz, mpg) are told apart from the page:
+  `lang="en-GB"` or a `.uk` domain → UK, otherwise US. The result names the
+  assumption, e.g. "35 mpg (US) ≈ 6.7 L/100 km".
+- Number formats `1,234.5`, `1.234,5` and `2,5` are understood; on pages in
+  comma-decimal languages, `1.500` means 1500.
+- Avoids false hits: `5 friends`, `in 2024`, `5 in a row`, `21st`, `the 90's`,
+  `5G`.
+- Several measurements in one selection: up to 3 are shown.
+- Clicking a result copies it.
 
 ## F4 — Popup
 
@@ -114,6 +133,15 @@ measurement.
 | Translation target | English / Bulgarian | English |
 | Target currency | EUR / USD / RON / BGN | EUR |
 | Word wrapper | on / off | on |
+| Length | metric / imperial | metric |
+| Weight | kg / lb / st & lb | kg |
+| Temperature | °C / °F | °C |
+| Volume | metric / US / UK | metric |
+| Speed | km/h / mph | km/h |
+| Fuel economy | L/100 km / US mpg / UK mpg / km/L | L/100 km |
+
+The units section also has **Metric**, **US** and **UK** buttons that set all
+six at once (UK: miles, st & lb, °C, UK gallons, mph, UK mpg).
 
 ## Non-goals (v1)
 

@@ -7,11 +7,12 @@ A [Floorp](https://floorp.app) / Firefox extension that helps with selected text
 - **Translates:** a popup next to the cursor opens the selection in Google
   Translate, in a new tab. Any source language; target is English or Bulgarian.
 - **Converts:** prices in any currency (`$19.99`, `50 lei`, `12 лв`, `VND 250000`)
-  to EUR, USD, RON or BGN, and imperial units (ft, mi, lb, stone,
-  °F, gal, mph) to metric.
+  to EUR, USD, RON or BGN, and measurements (length, weight, temperature,
+  volume, speed, fuel economy incl. mpg ↔ L/100 km) to your preferred units:
+  metric, US or UK, set per kind of measurement.
 
 > **Status:** early development, built in phases (see [PLAN.md](PLAN.md)).
-> Done so far: skeleton, settings page, popup at the mouse, translation, Word wrapper (phases 0–4). Not usable for
+> Done so far: settings, popup at the mouse, translation, Word wrapper, unit conversion (phases 0–5). Currency is next. Not usable for
 > everyday browsing yet.
 
 ## Development
@@ -49,6 +50,8 @@ test/*.test.js       unit tests (npm test)
 lib/settings.js      settings defaults and storage helpers
 lib/translate.js     Google Translate links and length limits
 lib/words.js         word boundaries for the Word wrapper
+lib/numbers.js       reading written numbers (1,234.5 · 1.234,5)
+lib/units.js         finding and converting measurements
 options/             settings page
 icons/               toolbar icon
 test/playground.html manual test page, one section per phase

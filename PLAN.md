@@ -87,17 +87,30 @@ Test:
 - [x] Toggle off in settings → no snapping
 - [x] Unit tests for word boundaries pass
 
-## Phase 5 — Unit conversion (offline)
-Popup shows the metric result when the selection is a measurement.
+## Phase 5 — Unit conversion (offline) + unit preferences
+Popup shows the converted value when the selection contains a measurement.
+Settings get a Units section: one preference per kind of measurement, plus
+Metric / US / UK buttons.
 
-Test (each selected on its own and inside a sentence):
-- [ ] `5 ft 11 in` → 180 cm · `6'2"` → 188 cm
-- [ ] `3 miles` / `26.2 mi` → km · `12 inches` → cm · `10 yd` → m
-- [ ] `180 lb` / `180 lbs` → 81.6 kg · `11 st 4 lb` → 71.7 kg · `8 oz` → 227 g
-- [ ] `72°F` / `72 F` / `-40 °F` → °C
-- [ ] `1 gallon` → 3.79 l · `12 fl oz` → 355 ml · `60 mph` → 97 km/h
-- [ ] Ordinary text (`5 friends`, `in 2024`) shows no conversion
-- [ ] Unit tests for the parser pass (most coverage lives here)
+Test (each selected on its own and inside a sentence), with metric settings:
+- [x] `5 ft 11 in` → 180 cm · `6'2"` → 188 cm
+- [x] `3 miles` / `26.2 mi` → km · `12 inches` → cm · `10 yd` → m
+- [x] `180 lb` / `180 lbs` → 81.6 kg · `11 st 4 lb` → 71.7 kg · `8 oz` → 227 g
+- [x] `72°F` / `72 F` / `-40 °F` → °C
+- [x] `1 gallon` → 3.79 L · `12 fl oz` → 355 ml · `60 mph` → 97 km/h
+- [x] `35 mpg` → 6.7 L/100 km (US); same on a UK page → 8.1 L/100 km (UK)
+- [x] Metric values (`180 cm`, `5 L/100 km`, `20 °C`) show nothing
+
+With other settings:
+- [x] US button → `180 cm` → 5 ft 11 in · `20 °C` → 68 °F · `6.7 L/100 km` → 35.1 mpg
+- [x] UK button → `80 kg` → 12 st 8 lb · `5 L/100 km` → 56.5 mpg (UK)
+- [x] Changing a preference applies to the next selection without reloading
+
+Robustness:
+- [x] Ordinary text (`5 friends`, `in 2024`, `5 in a row`, `21st`, `the 90's`, `5G`) shows no conversion
+- [x] A sentence with two measurements shows both
+- [x] Clicking a result copies it
+- [x] Unit tests for the parser and conversions pass (most coverage lives here)
 
 ## Phase 6 — Currency with fixed rates
 Price detection and parsing, converting with the BGN fixed rate (1.95583) and a

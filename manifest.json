@@ -7,15 +7,22 @@
     "gecko": {
       "id": "selectkit@xumepa",
       "strict_min_version": "128.0",
-      "data_collection_permissions": { "required": ["none"] }
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
     }
   },
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
   "action": {
     "default_title": "SelectKit",
-    "default_icon": "icons/icon.svg"
+    "default_icon": "icons/icon.svg",
+    "default_area": "navbar"
   },
   "icons": {
     "48": "icons/icon.svg",

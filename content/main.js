@@ -1,4 +1,10 @@
 const popup = new SelectionPopup();
+let settings = { ...DEFAULT_SETTINGS };
+
+getSettings().then((stored) => { settings = stored; });
+browser.storage.onChanged.addListener((changes) => {
+  for (const [key, { newValue }] of Object.entries(changes)) settings[key] = newValue;
+});
 
 function selectedText() {
   return window.getSelection().toString().trim();
@@ -14,8 +20,24 @@ function inEditable(event) {
     (el.closest("input, textarea, select") || el.isContentEditable));
 }
 
+async function translate(text) {
+  if (fitForTranslate(text).truncated) {
+    // Too long for the link: put the whole text on the clipboard as well.
+    await navigator.clipboard.writeText(text).catch(() => {});
+  }
+  await browser.runtime.sendMessage({ type: "translate", text });
+}
+
 function buildActions(text) {
   return [
+    {
+      label: `Translate → ${settings.targetLang.toUpperCase()}`,
+      title: "Open in Google Translate",
+      onClick: () => {
+        popup.hide();
+        translate(text);
+      },
+    },
     {
       label: "Copy",
       onClick: async (button) => {
@@ -58,3 +80,13 @@ document.addEventListener("selectionchange", () => {
 
 window.addEventListener("scroll", () => popup.hide(), { passive: true, capture: true });
 window.addEventListener("resize", () => popup.hide());
+
+// From the context menu and the keyboard shortcut. Only the frame that has
+// a selection answers.
+browser.runtime.onMessage.addListener((msg) => {
+  if (msg.type !== "translate-selection") return;
+  const text = selectedText();
+  if (!text) return;
+  popup.hide();
+  return translate(text).then(() => true);
+});

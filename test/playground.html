@@ -25,7 +25,7 @@
   <section id="phase-0">
     <h2>Phase 0 — Skeleton</h2>
     <p>If Floorp opened on this page with the SelectKit icon in the toolbar, the extension is loaded.</p>
-    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.2.0 loaded”.</p>
+    <p class="hint">Check for errors: <code>about:debugging#/runtime/this-firefox</code> → SelectKit → Inspect → Console should say “SelectKit 0.3.0 loaded”.</p>
   </section>
 
   <section id="phase-1">
@@ -66,6 +66,45 @@
 
     <p>Other languages: 日本語のテキストを選択してください。 Изберете този текст на български. اختر هذا النص.</p>
 
+  </section>
+
+  <section id="phase-3">
+    <h2>Phase 3 — Translate in a new tab</h2>
+    <ol>
+      <li>Select a line below → popup shows <b>Translate → EN</b> and <b>Copy</b>. Click Translate → a Google Translate tab opens right after this one, source detected, text filled in.</li>
+      <li>Settings → Bulgarian → select again (no reload) → button says <b>Translate → BG</b>, tab opens with Bulgarian as target.</li>
+      <li>Right-click a selection → <b>Translate “…” → EN</b> (label follows the setting).</li>
+      <li><b>Alt+Shift+T</b> with a selection → same tab. Without a selection → nothing happens.</li>
+      <li>Long texts below → tab gets a shortened part ending at a sentence; paste somewhere → the full text is on the clipboard.</li>
+      <li>Special characters line → arrives in Google Translate exactly as written.</li>
+    </ol>
+    <ul lang="und">
+      <li lang="ja">日本語：今日はとても良い天気ですね。散歩に行きましょう。</li>
+      <li lang="zh">中文：我们明天在火车站见面吧。</li>
+      <li lang="ko">한국어: 이 책은 정말 재미있어요.</li>
+      <li lang="ar" dir="rtl">العربية: أين أقرب محطة مترو؟</li>
+      <li lang="he" dir="rtl">עברית: אני לומד לבשל בבית.</li>
+      <li lang="ru">Русский: Сегодня мы идём в театр.</li>
+      <li lang="de">Deutsch: Die Straße ist wegen Bauarbeiten gesperrt.</li>
+      <li lang="es">Español: ¿Dónde está la biblioteca?</li>
+      <li lang="tr">Türkçe: Kahvaltıda ne yemek istersin?</li>
+      <li lang="hi">हिन्दी: मुझे यह गाना बहुत पसंद है।</li>
+      <li lang="bg">Български: Утре ще вали сняг в планината.</li>
+      <li>Mixed: My friend 田中さん said “ça va” before leaving for Москва.</li>
+      <li>Special characters: Tom &amp; Jerry #1? 100% "quotes" + plus = 😀 &lt;tag&gt;</li>
+    </ul>
+    <p><b>Long Latin text (~8000 chars):</b></p>
+    <p id="long-latin" class="hint"></p>
+    <p><b>Long Japanese text (~3300 chars, Google's URL limit cuts it to ~1300):</b></p>
+    <p id="long-ja" class="hint" lang="ja"></p>
+    <script>
+      document.getElementById("long-latin").textContent =
+        Array.from({ length: 160 }, (_, i) => `Sentence number ${i + 1} is here to make this text long enough. `).join("");
+      document.getElementById("long-ja").textContent = "これは日本語の長い文章のテストです。".repeat(185);
+    </script>
+  </section>
+
+  <section id="bottom">
     <div id="tall"></div>
     <p><b>Bottom of the page:</b> scroll down here and select this text near the bottom of the window → the popup opens above the cursor instead of below.</p>
   </section>

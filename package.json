@@ -6,7 +6,7 @@
     "start": "web-ext run --firefox=flatpak:one.ablaze.floorp --start-url http://localhost:8000/playground.html",
     "playground": "python3 -m http.server -d test 8000",
     "lint": "web-ext lint",
-    "test": "node --test test/"
+    "test": "node --test 'test/**/*.test.js'"
   },
   "devDependencies": {
     "web-ext": "^8.3.0"

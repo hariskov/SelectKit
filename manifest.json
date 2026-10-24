@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SelectKit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Completes selections to whole words, sends text to Google Translate, converts prices and units.",
   "browser_specific_settings": {
     "gecko": {
@@ -16,10 +16,13 @@
   },
   "permissions": [
     "storage",
-    "clipboardWrite"
+    "clipboardWrite",
+    "menus"
   ],
   "background": {
     "scripts": [
+      "lib/settings.js",
+      "lib/translate.js",
       "background.js"
     ]
   },
@@ -29,6 +32,8 @@
         "<all_urls>"
       ],
       "js": [
+        "lib/settings.js",
+        "lib/translate.js",
         "content/popup.js",
         "content/main.js"
       ],
@@ -48,5 +53,13 @@
   "icons": {
     "48": "icons/icon.svg",
     "96": "icons/icon.svg"
+  },
+  "commands": {
+    "translate-selection": {
+      "suggested_key": {
+        "default": "Alt+Shift+T"
+      },
+      "description": "Translate the selected text in Google Translate"
+    }
   }
 }

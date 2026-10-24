@@ -31,8 +31,11 @@ https://translate.google.com/?sl=auto&tl=<target>&text=<selection>&op=translate
 - Works from **any source language**: `sl=auto` lets Google detect it, so the
   user never picks a source language.
 - `<target>` is set in the settings: English (`en`, default) or Bulgarian (`bg`).
-- Text over 5,000 characters is cut at a sentence/word boundary for the URL,
-  and the full text is copied to the clipboard.
+- Text is cut to fit both Google Translate's 5,000-character limit and its
+  URL size limit (requests over ~16 KB get HTTP 400; non-Latin text costs up
+  to 9 URL characters per character, so Japanese fits ~1,300 characters).
+  The cut is made at a sentence or word boundary, and the full text is copied
+  to the clipboard.
 - Also available from the right-click menu and the `Alt+Shift+T` shortcut.
 
 ## F3 — Conversion

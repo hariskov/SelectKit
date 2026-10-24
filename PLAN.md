@@ -60,14 +60,15 @@ Test:
 **Translate → EN/BG** button, right-click menu entry, `Alt+Shift+T`.
 
 Test:
-- [ ] Any source language works with no setup (`sl=auto`): Japanese, Chinese, Korean, Arabic (RTL), Hebrew, Russian, German, Spanish, Turkish, Hindi → new tab right after the current one with `tl=en` and the text filled in
-- [ ] Mixed-language selection (e.g. English sentence with a Japanese name) still opens correctly
-- [ ] Switch setting to Bulgarian → button label and tab use `tl=bg`, no reload needed
+- [x] Any source language works with no setup (`sl=auto`): Japanese, Chinese, Korean, Arabic (RTL), Hebrew, Russian, German, Spanish, Turkish, Hindi → new tab right after the current one with `tl=en` and the text filled in
+- [x] Mixed-language selection (e.g. English sentence with a Japanese name) still opens correctly
+- [x] Switch setting to Bulgarian → button label and tab use `tl=bg`, no reload needed
 - [ ] Right-click → "Translate “…” → EN" works; menu label follows the setting
 - [ ] `Alt+Shift+T` works with a selection; does nothing without one
-- [ ] Text > 5000 chars: tab gets a truncated part, full text is on the clipboard
-- [ ] Text with `&`, `#`, `?`, newlines and emoji arrives intact
-- [ ] Unit tests for truncation pass
+- [x] Text > 5000 chars: tab gets a truncated part ending at a sentence, full text is on the clipboard
+- [x] Long non-Latin text (Japanese ~3300 chars) is cut to fit Google's URL limit (~1300 chars) and still opens
+- [x] Text with `&`, `#`, `?`, newlines and emoji arrives intact
+- [x] Unit tests for truncation pass
 
 ## Phase 4 — Word wrapper
 Partly selected words at either edge get selected in full.

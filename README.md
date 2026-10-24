@@ -11,7 +11,7 @@ A [Floorp](https://floorp.app) / Firefox extension that helps with selected text
   °F, gal, mph) to metric.
 
 > **Status:** early development, built in phases (see [PLAN.md](PLAN.md)).
-> Done so far: skeleton, settings page, popup at the mouse (phases 0–2). Not usable for
+> Done so far: skeleton, settings page, popup at the mouse, translation (phases 0–3). Not usable for
 > everyday browsing yet.
 
 ## Development
@@ -45,7 +45,9 @@ To try it in your normal Floorp instead: `about:debugging` → *This Floorp* →
 manifest.json        extension manifest (MV3)
 background.js        background script
 content/             content scripts: popup at the mouse
+test/*.test.js       unit tests (npm test)
 lib/settings.js      settings defaults and storage helpers
+lib/translate.js     Google Translate links and length limits
 options/             settings page
 icons/               toolbar icon
 test/playground.html manual test page, one section per phase

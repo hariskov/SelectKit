@@ -5,9 +5,12 @@ Don't start the next phase until the current checklist passes.
 
 ## How we run and test
 
-- **Run:** `npx web-ext run --firefox=flatpak:one.ablaze.floorp` (Floorp is a
-  flatpak here; verified in phase 0). Fallback: `about:debugging` →
-  *This Floorp* → *Load Temporary Add-on…* → `manifest.json`.
+- **Run:** `npm run playground` in one terminal, `npm start` in another.
+  This launches the Floorp flatpak with a throwaway profile and the extension
+  loaded, opens the playground, and reloads the extension when files change.
+  The first launch takes ~45 s before "Installed … as a temporary add-on"
+  appears. Fallback: `about:debugging` → *This Floorp* →
+  *Load Temporary Add-on…* → `manifest.json`.
 - **Manual tests:** `test/playground.html`. It gets a new section for each
   phase (sample text, Japanese/Bulgarian text, prices, units, an iframe, a page
   with aggressive CSS). Serve it with `python -m http.server -d test 8000`.

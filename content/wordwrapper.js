@@ -27,6 +27,13 @@ function nearbyTextNodes(node) {
   return [...before, node, ...after];
 }
 
+// A price or measurement wins over the word, so "25" in "$25" or "25 лв"
+// grows to the whole price.
+function spanAround(text, position) {
+  const inside = ({ start, end }) => start < position && position < end;
+  return [...findPrices(text), ...findMeasurements(text)].find(inside) ?? wordAround(text, position);
+}
+
 function wrapEdge(node, offset, isEnd) {
   if (node.nodeType !== Node.TEXT_NODE) return null;
 
@@ -37,9 +44,9 @@ function wrapEdge(node, offset, isEnd) {
     starts.push(text.length);
     text += n.data;
   }
-  const word = wordAround(text, starts[nodes.indexOf(node)] + offset);
-  if (!word) return null;
-  const target = isEnd ? word.end : word.start;
+  const span = spanAround(text, starts[nodes.indexOf(node)] + offset);
+  if (!span) return null;
+  const target = isEnd ? span.end : span.start;
 
   // Between two nodes, an end edge stays in the earlier one, a start edge
   // in the later one.
@@ -51,7 +58,7 @@ function wrapEdge(node, offset, isEnd) {
   return null;
 }
 
-function wrapSelectionToWords() {
+function wrapSelection() {
   const selection = window.getSelection();
   if (!selection || selection.rangeCount !== 1 || selection.isCollapsed) return;
 

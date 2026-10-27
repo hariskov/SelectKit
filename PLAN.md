@@ -83,6 +83,7 @@ Test:
 - [x] RTL text (Arabic, Hebrew) and accented Latin (`Straße`, `café`, `naïve`) complete correctly
 - [x] Words split by markup (`im<b>port</b>ant`) complete across the tags
 - [x] Popup Copy/Translate use the completed selection
+- [ ] Added after 1.0 review: double-click or drag into a price or measurement selects all of it (`$25`, `25 лв`, `5 ft 11 in`)
 - [x] Selections in inputs/textareas/editors are never changed
 - [x] Toggle off in settings → no snapping
 - [x] Unit tests for word boundaries pass

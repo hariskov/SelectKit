@@ -29,15 +29,55 @@ test("Word wrapper works across inline markup", async () => {
   assert.equal(page.selection(), "important word");
 });
 
-test("Word wrapper leaves edges on boundaries, and double clicks, alone", async () => {
+test("Word wrapper leaves edges on boundaries, and triple clicks, alone", async () => {
   const page = openPage("<p>select all words</p>");
   page.select("select", 6, "select", 11);
   await page.mouseUp();
   assert.equal(page.selection(), " all ");
 
   page.select("select", 8, "select", 9);
-  await page.mouseUp(page.document.body, { detail: 2 });
+  await page.mouseUp(page.document.body, { detail: 3 });
   assert.equal(page.selection(), "l");
+});
+
+test("a double click on the number takes the whole price", async () => {
+  for (const [html, number, start, expected] of [
+    ["<p>It costs $25 today</p>", "25", 10, "$25"],
+    ["<p>It costs 25 лв today</p>", "25", 9, "25 лв"],
+    ["<p>Only €1,299.00 now</p>", "1,299.00", 6, "€1,299.00"],
+    ["<p>Price: USD 40 each</p>", "40", 11, "USD 40"],
+  ]) {
+    const page = openPage(html);
+    page.select(number, start, number, start + number.length);
+    await page.mouseUp(page.document.body, { detail: 2 });
+    assert.equal(page.selection(), expected, html);
+  }
+});
+
+test("a drag into a price or measurement takes all of it", async () => {
+  const page = openPage("<p>pay 120 lei for 5 ft 11 in of rope</p>");
+  page.select("pay", 5, "pay", 10);
+  await page.mouseUp();
+  assert.equal(page.selection(), "120 lei");
+
+  page.select("pay", 18, "pay", 22);
+  await page.mouseUp();
+  assert.equal(page.selection(), "5 ft 11 in");
+});
+
+test("prices split by markup are taken whole", async () => {
+  const page = openPage("<p>now <b>$</b><span>25</span> only</p>");
+  page.select("25", 0, "25", 2);
+  await page.mouseUp(page.document.body, { detail: 2 });
+  assert.equal(page.selection(), "$25");
+});
+
+test("prices aren't grown when the Word wrapper is off", async () => {
+  const page = openPage("<p>It costs $25 today</p>", { settings: { wordWrapper: false } });
+  await page.wait();
+  page.select("$25", 10, "$25", 12);
+  await page.mouseUp(page.document.body, { detail: 2 });
+  assert.equal(page.selection(), "25");
 });
 
 test("Word wrapper follows its setting", async () => {

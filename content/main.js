@@ -182,8 +182,8 @@ document.addEventListener("mouseup", (event) => {
   }
   // After the browser has finished updating the selection.
   setTimeout(() => {
-    // Double and triple clicks already select whole words.
-    if (settings.wordWrapper && event.detail === 1) wrapSelectionToWords();
+    // A triple click selects the whole paragraph already.
+    if (settings.wordWrapper && event.detail < 3) wrapSelection();
     const text = selectedText();
     clearTimeout(pendingShow);
     if (!text) {

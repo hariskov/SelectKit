@@ -15,6 +15,10 @@ full. Selecting `ect all wor` in "select all words" becomes `select all words`.
   spaces such as Chinese, Japanese and Thai (dictionary-based word breaks).
 - Only an edge that falls *inside* a word moves; edges already on a boundary,
   or on whitespace/punctuation, stay put.
+- An edge inside a price or measurement takes all of it, sign and unit
+  included: double-clicking `25` in `$25` selects `$25`, in `25 лв` selects
+  `25 лв`; a drag into `5 ft 11 in` selects all of it. Applies to double
+  clicks too (not triple clicks).
 - Selection direction (anchor/focus) is preserved.
 - Selections inside `<input>`/`<textarea>` and editable regions are left alone.
 - Can be switched off in the settings.

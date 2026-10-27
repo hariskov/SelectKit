@@ -18,7 +18,7 @@ text. Select something and a small popup appears next to the cursor.
 The toolbar icon shows the version and opens the settings, where sites can
 also be switched off.
 
-**Version 1.0.0.**
+**Version 1.0.1.**
 
 ## Install
 

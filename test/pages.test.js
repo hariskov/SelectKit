@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
 const { JSDOM } = require("jsdom");
-const { ROOT } = require("./helpers/load.js");
+const { ROOT, MANIFEST } = require("./helpers/load.js");
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -34,7 +34,7 @@ async function openExtensionPage(htmlFile, { stored = {}, rates = null, refreshe
       onChanged: { addListener: (listener) => listeners.push(listener) },
     },
     runtime: {
-      getManifest: () => ({ version: "1.0.0" }),
+      getManifest: () => MANIFEST,
       openOptionsPage: () => { calls.openedOptions += 1; },
       sendMessage: async (message) => (message.type === "refresh-rates" ? refreshed : undefined),
     },
@@ -158,7 +158,7 @@ test("rates: date, source and refreshing", async () => {
 
 test("toolbar panel shows the version and rates, and opens settings", async () => {
   const page = await openExtensionPage("panel/panel.html", { rates: { ecbDate: "2026-10-23" } });
-  assert.match(page.$("#version").textContent, /^Version 1\.0\.0 · \d{4}-\d{2}-\d{2}$/);
+  assert.match(page.$("#version").textContent, new RegExp(`^Version ${MANIFEST.version} · \\d{4}-\\d{2}-\\d{2}$`));
   assert.equal(page.$("#rates").textContent, "Exchange rates from 2026-10-23.");
   assert.equal(page.$("#source").href, "https://github.com/hariskov/SelectKit");
   page.$("#settings").click();

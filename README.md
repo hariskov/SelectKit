@@ -18,8 +18,7 @@ text. Select something and a small popup appears next to the cursor.
 The toolbar icon shows the version and opens the settings, where sites can
 also be switched off.
 
-**Version 1.0.0.** How it was built, phase by phase: [PLAN.md](PLAN.md). What
-it does in detail: [SPEC.md](SPEC.md).
+**Version 1.0.0.**
 
 ## Install
 
@@ -43,14 +42,13 @@ Floorp restarts):
 
 ## Development
 
-Requirements: Node.js, Python 3, and Floorp. The scripts assume the Floorp
+Requirements: Node.js and Floorp. The scripts assume the Floorp
 flatpak (`one.ablaze.floorp`). For a regular install, change `--firefox=` in
 `package.json` to the binary path.
 
 ```sh
 npm install
-npm run playground   # terminal 1: serves test/playground.html on :8000
-npm start            # terminal 2: opens a separate Floorp window with the extension
+npm start            # opens a separate Floorp window with the extension
 ```
 
 The first `npm start` takes about 45 seconds before Floorp shows up. It uses a
@@ -60,7 +58,7 @@ extension reloads when files change. If a change doesn't show up, use
 
 ```sh
 npm run lint         # web-ext lint, must be clean
-npm test             # unit tests for the pure logic (node --test)
+npm test             # all tests (node --test)
 npm run gen:currencies  # regenerate lib/currency-data.js from CLDR
 ```
 
@@ -88,9 +86,6 @@ lib/rates.js         downloading and caching exchange rates
 scripts/             npm run gen:currencies
 options/             settings page
 icons/               toolbar icon
-test/playground.html manual test page, one section per phase
-SPEC.md              what the extension does
-PLAN.md              phases and their test checklists
 ```
 
 ## Privacy

@@ -10,7 +10,7 @@ test("siteOf turns URLs and host names into sites", () => {
   assert.equal(siteOf("news.bbc.co.uk"), "news.bbc.co.uk");
   assert.equal(siteOf("about:blank"), null);
   assert.equal(siteOf("localhost"), "localhost");
-  assert.equal(siteOf("http://localhost:8000/playground.html"), "localhost");
+  assert.equal(siteOf("http://localhost:8000/page.html"), "localhost");
   assert.equal(siteOf(""), null);
 });
 

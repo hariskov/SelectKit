@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { NUMBER_PATTERN, parseNumber, usesDecimalComma } = require("../lib/numbers.js");
+const { loadScripts } = require("./helpers/load.js");
+const { NUMBER_PATTERN, parseNumber, usesDecimalComma } = loadScripts(["lib/numbers.js"]);
 
 test("plain and negative numbers", () => {
   assert.equal(parseNumber("42"), 42);
@@ -48,4 +49,14 @@ test("usesDecimalComma", () => {
   assert.equal(usesDecimalComma("bg"), true);
   assert.equal(usesDecimalComma("en-US"), false);
   assert.equal(usesDecimalComma(""), false);
+});
+
+const { numberFormat } = loadScripts(["lib/numbers.js"]);
+
+test("numberFormat reuses formatters", () => {
+  assert.equal(numberFormat("en", { maximumFractionDigits: 1 }), numberFormat("en", { maximumFractionDigits: 1 }));
+  assert.notEqual(numberFormat("en", { maximumFractionDigits: 1 }), numberFormat("en", { maximumFractionDigits: 2 }));
+  assert.equal(numberFormat("en", { maximumFractionDigits: 1 }).format(1.25), "1.3");
+  assert.equal(numberFormat("de", { maximumFractionDigits: 1 }).format(1.25), "1,3");
+  assert.equal(numberFormat(undefined, { maximumFractionDigits: 0 }).format(2.5).length, 1);
 });

@@ -1,84 +1,95 @@
+const MAX_CONVERSIONS = 3;
+// Longer selections are prose, not prices or measurements.
+const MAX_CONVERSION_TEXT = 300;
+const CLOSE_AFTER_COPY = 600;
+
 const popup = new SelectionPopup();
 let settings = { ...DEFAULT_SETTINGS };
-// Exchange rates from the background script; loaded when a price is first selected.
 let rates = null;
 let ratesRequest = null;
+let current = null;
+let pendingShow = null;
+// Per page: the currency the user switched an ambiguous symbol to.
+const assumedCurrency = new Map();
 
-getSettings().then((stored) => { settings = stored; });
+const changedSinceLoad = new Set();
+
+getSettings().then((stored) => {
+  for (const [key, value] of Object.entries(stored)) {
+    if (!changedSinceLoad.has(key)) settings[key] = value;
+  }
+});
+
 browser.storage.onChanged.addListener((changes, area) => {
   if (area === "sync") {
-    for (const [key, { newValue }] of Object.entries(changes)) settings[key] = newValue;
+    for (const [key, { newValue }] of Object.entries(changes)) {
+      settings[key] = newValue ?? DEFAULT_SETTINGS[key];
+      changedSinceLoad.add(key);
+    }
+  } else if (area === "local" && changes.rates) {
+    rates = changes.rates.newValue ?? null;
   }
-  if (area === "local" && changes.rates) rates = changes.rates.newValue ?? null;
 });
 
 function loadRates() {
   ratesRequest ??= browser.runtime.sendMessage({ type: "get-rates" })
-    .then((loaded) => { rates = loaded; })
+    .then((loaded) => {
+      rates = loaded;
+    })
     .catch(() => {})
-    .finally(() => { ratesRequest = null; });
+    .finally(() => {
+      ratesRequest = null;
+    });
   return ratesRequest;
 }
 
-// What the popup is showing, so it can be redrawn when rates arrive or the
-// assumed currency is switched.
-let current = null;
-
-function render() {
-  if (current) popup.show(current.x, current.y, buildActions(current.text));
-}
-
 function selectedText() {
-  return window.getSelection().toString().trim();
+  return window.getSelection()?.toString().trim() ?? "";
 }
 
-// Text fields and rich-text editors are left alone. Firefox reports a
-// selection inside an <input> as the page selection, so check the focus too.
+// Firefox reports a selection inside an <input> as the page selection, so
+// the focused element is checked as well.
 function inEditable(event) {
-  const target = event.composedPath()[0];
-  const active = document.activeElement;
-  return [target, active].some((el) =>
-    el instanceof Element &&
-    (el.closest("input, textarea, select") || el.isContentEditable));
+  return [event.composedPath()[0], document.activeElement].some((element) =>
+    element instanceof Element && (element.closest("input, textarea, select") || element.isContentEditable));
 }
 
-// Language and country of the selected text: the nearest lang attribute
-// (so a British quote on another page still counts as British), else the
-// site's country domain.
+// From the nearest lang attribute (a British quote counts as British), else
+// the site's country domain.
 function selectionContext() {
-  const node = window.getSelection().anchorNode;
-  const el = node && (node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement);
-  const lang = el?.closest("[lang]")?.lang || document.documentElement.lang || "";
+  const node = window.getSelection()?.anchorNode;
+  const element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
+  const lang = element?.closest("[lang]")?.lang || document.documentElement.lang || "";
   const tld = location.hostname.split(".").pop().toUpperCase();
   const domainRegion = tld === "UK" ? "GB" : /^[A-Z]{2}$/.test(tld) ? tld : "";
   const region = (lang.split(/[-_]/)[1] || "").toUpperCase() || domainRegion;
   return { region, uk: region === "GB", decimalComma: usesDecimalComma(lang) };
 }
 
-const MAX_CONVERSIONS = 3;
-// Longer selections are prose, not prices or measurements worth converting.
-const MAX_CONVERSION_TEXT = 300;
-
-function copyAction(label, title, value) {
-  return {
-    label,
-    title,
-    className: "result",
-    onClick: async (button) => {
-      await navigator.clipboard.writeText(value);
-      button.textContent = "Copied";
-      setTimeout(() => popup.hide(), 600);
-    },
-  };
+function siteIsOff() {
+  return blockingEntry(location.hostname || "localhost", settings.blockedSites) !== null;
 }
 
-// The currency picked for an ambiguous symbol on this page ("$" -> CAD),
-// after the user switched it in the popup.
-const assumedCurrency = new Map();
+async function copy(text, button) {
+  try {
+    await navigator.clipboard.writeText(text);
+    button.textContent = "Copied";
+  } catch {
+    button.textContent = "Couldn't copy";
+  }
+  setTimeout(() => popup.hide(), CLOSE_AFTER_COPY);
+}
 
-function priceActions(text) {
-  if (text.length > MAX_CONVERSION_TEXT) return [];
-  const prices = findPrices(text, selectionContext()).slice(0, MAX_CONVERSIONS);
+function copyAction(label, value, { title, className } = {}) {
+  return { label, title, className, onClick: (button) => copy(value, button) };
+}
+
+function resultLabel(source, out, showSource) {
+  return showSource ? `${source} ≈ ${out}` : `≈ ${out}`;
+}
+
+function priceActions(text, context) {
+  const prices = findPrices(text, context).slice(0, MAX_CONVERSIONS);
   if (!prices.length) return [];
   if (!rates) {
     loadRates().then(() => {
@@ -88,16 +99,17 @@ function priceActions(text) {
   }
 
   const target = settings.targetCurrency;
-  const rateDate = rates.ecbDate ?? rates.otherDate;
-  const actions = [];
-  for (const price of prices) {
-    const code = assumedCurrency.get(price.symbol) ?? price.codes[0];
+  const title = `rates of ${rates.ecbDate ?? rates.otherDate}`;
+  return prices.flatMap((price) => {
+    const key = price.symbol?.toLowerCase();
+    const code = assumedCurrency.get(key) ?? price.codes[0];
+    const actions = [];
     const value = convertPrice(price.amount, code, target, rates.values);
     if (value !== null) {
       const out = formatMoney(value, target);
       const source = price.symbol ? `${price.text} (${code})` : price.text;
-      const label = price.symbol || prices.length > 1 ? `${source} ≈ ${out}` : `≈ ${out}`;
-      actions.push(copyAction(label, `Copy “${out}” · rates of ${rateDate}`, out));
+      const label = resultLabel(source, out, price.symbol || prices.length > 1);
+      actions.push(copyAction(label, out, { title: `Copy “${out}” · ${title}`, className: "result" }));
     }
     if (price.codes.length > 1) {
       const next = price.codes[(price.codes.indexOf(code) + 1) % price.codes.length];
@@ -106,42 +118,41 @@ function priceActions(text) {
         title: `“${price.symbol}” taken as ${code}. Click for ${next}.`,
         className: "switch",
         onClick: () => {
-          assumedCurrency.set(price.symbol, next);
+          assumedCurrency.set(key, next);
           render();
         },
       });
     }
-  }
-  return actions;
+    return actions;
+  });
 }
 
-function measurementActions(text) {
-  if (text.length > MAX_CONVERSION_TEXT) return [];
+function measurementActions(text, context) {
   const prefs = unitPrefs(settings);
-  const results = findMeasurements(text, selectionContext())
+  const results = findMeasurements(text, context)
     .map((found) => ({ found, out: convertMeasurement(found, prefs) }))
     .filter(({ out }) => out)
     .slice(0, MAX_CONVERSIONS);
-
   return results.map(({ found, out }) => {
     const source = found.note ? `${found.text} (${found.note})` : found.text;
-    const showSource = results.length > 1 || found.note;
-    return copyAction(showSource ? `${source} ≈ ${out}` : `≈ ${out}`, `Copy “${out}”`, out);
+    const label = resultLabel(source, out, results.length > 1 || found.note);
+    return copyAction(label, out, { title: `Copy “${out}”`, className: "result" });
   });
 }
 
 async function translate(text) {
   if (fitForTranslate(text).truncated) {
-    // Too long for the link: put the whole text on the clipboard as well.
     await navigator.clipboard.writeText(text).catch(() => {});
   }
   await browser.runtime.sendMessage({ type: "translate", text });
 }
 
-function buildActions(text) {
+function buildActions({ text, context }) {
+  const conversions = text.length > MAX_CONVERSION_TEXT
+    ? []
+    : [...priceActions(text, context), ...measurementActions(text, context)];
   return [
-    ...priceActions(text),
-    ...measurementActions(text),
+    ...conversions,
     {
       label: `Translate → ${settings.targetLang.toUpperCase()}`,
       title: "Open in Google Translate",
@@ -150,22 +161,17 @@ function buildActions(text) {
         translate(text);
       },
     },
-    {
-      label: "Copy",
-      onClick: async (button) => {
-        await navigator.clipboard.writeText(text);
-        button.textContent = "Copied";
-        setTimeout(() => popup.hide(), 600);
-      },
-    },
+    copyAction("Copy", text),
   ];
 }
 
-// The popup waiting for the "Popup delay" setting.
-let pendingShow = null;
+function render() {
+  if (current) popup.show(current.x, current.y, buildActions(current));
+}
 
-function siteIsOff() {
-  return !!blockingEntry(location.hostname || "localhost", settings.blockedSites);
+function showPopup(text, x, y) {
+  current = { text, x, y, context: selectionContext() };
+  render();
 }
 
 document.addEventListener("mouseup", (event) => {
@@ -174,27 +180,21 @@ document.addEventListener("mouseup", (event) => {
     popup.hide();
     return;
   }
-  // Let the browser finish updating the selection (matters for double/triple click).
+  // After the browser has finished updating the selection.
   setTimeout(() => {
-    // Double/triple click already select whole words/paragraphs.
+    // Double and triple clicks already select whole words.
     if (settings.wordWrapper && event.detail === 1) wrapSelectionToWords();
     const text = selectedText();
+    clearTimeout(pendingShow);
     if (!text) {
       current = null;
       popup.hide();
-      return;
-    }
-    const show = () => {
-      current = { text, x: event.clientX, y: event.clientY };
-      render();
-    };
-    clearTimeout(pendingShow);
-    if (settings.popupDelay > 0) {
+    } else if (settings.popupDelay > 0) {
       pendingShow = setTimeout(() => {
-        if (selectedText() === text) show();
+        if (selectedText() === text) showPopup(text, event.clientX, event.clientY);
       }, settings.popupDelay);
     } else {
-      show();
+      showPopup(text, event.clientX, event.clientY);
     }
   }, 0);
 }, true);

@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { findPrices, convertPrice, formatMoney, BGN_PER_EUR } = require("../lib/currencies.js");
+const { loadScripts } = require("./helpers/load.js");
+const { findPrices, convertPrice, formatMoney, BGN_PER_EUR } = loadScripts(["lib/patterns.js", "lib/numbers.js", "lib/currency-data.js", "lib/currencies.js"]);
 
 // Fixed test rates (per 1 EUR). The extension itself always uses live rates.
 const RATES = { USD: 1.12, GBP: 0.85, JPY: 165, CHF: 0.94, RON: 5.35, PLN: 4.3, CZK: 25, TRY: 38,
@@ -48,9 +49,19 @@ test("symbol, name and code mean the same currency", () => {
 test("lower-case codes only when the selection is just the price", () => {
   assert.equal(first("ron 50"), "50 RON");
   assert.equal(first("50ron"), "50 RON");
-  assert.equal(first("try 40"), "40 TRY");
+  assert.equal(first("TRY 40"), "40 TRY");
+  assert.equal(first("try 40"), null);
+  assert.equal(first("top 10"), null);
   assert.equal(first("give it 5 try more"), null);
   assert.equal(first("we have 10 cup cakes"), null);
+});
+
+test("ISO codes that are English words never come before the number", () => {
+  for (const text of ["TOP 10 LIST", "ALL 5 PLAYERS", "CUP 3 FINAL", "MAD 4 IT", "PEN 2 PAPER", "SEND SOS 1 TIME"]) {
+    assert.deepEqual(findPrices(text), [], text);
+  }
+  assert.equal(first("costs 40 TRY"), "40 TRY");
+  assert.equal(first("costs 500 ALL"), "500 ALL");
 });
 
 test("number formats", () => {

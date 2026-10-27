@@ -1,8 +1,3 @@
-// Small popup shown next to the mouse after a selection.
-// Lives in a closed Shadow DOM so page styles can't reach its contents; the
-// host element's own styles are inline and !important so page rules can't
-// hide or move it either.
-
 const POPUP_CSS = `
   :host {
     all: initial;
@@ -55,6 +50,8 @@ const POPUP_CSS = `
   .sep { width: 1px; align-self: stretch; margin: 3px 1px; background: var(--line); }
 `;
 
+// Inline and !important so page CSS can't hide or move the popup; its
+// contents are in a closed shadow root.
 const HOST_STYLE = [
   "all: initial", "display: block", "position: fixed", "top: 0", "left: 0",
   "width: 0", "height: 0", "overflow: visible", "z-index: 2147483647",
@@ -67,7 +64,7 @@ class SelectionPopup {
   }
 
   mount() {
-    if (this.host && this.host.isConnected) return;
+    if (this.host?.isConnected) return;
     this.host = document.createElement("selectkit-popup");
     this.host.style.cssText = HOST_STYLE;
     const root = this.host.attachShadow({ mode: "closed" });
@@ -75,7 +72,7 @@ class SelectionPopup {
     style.textContent = POPUP_CSS;
     this.box = document.createElement("div");
     this.box.className = "popup";
-    // Keep the page selection alive when the popup is clicked.
+    // Clicking the popup must not clear the page selection.
     this.box.addEventListener("mousedown", (e) => e.preventDefault());
     root.append(style, this.box);
     document.documentElement.append(this.host);
@@ -89,7 +86,6 @@ class SelectionPopup {
     return !!this.box && this.box.classList.contains("open");
   }
 
-  // actions: [{ label, title?, className?, onClick(button) }]
   show(clientX, clientY, actions) {
     this.mount();
     this.box.replaceChildren();
@@ -110,7 +106,6 @@ class SelectionPopup {
       this.box.append(button);
     });
 
-    // Below-right of the cursor; flip left/up when it would leave the window.
     this.box.style.left = "0px";
     this.box.style.top = "0px";
     this.box.style.visibility = "hidden";

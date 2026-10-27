@@ -33,6 +33,7 @@
       ],
       "js": [
         "lib/settings.js",
+        "lib/patterns.js",
         "lib/numbers.js",
         "lib/units.js",
         "lib/currency-data.js",

@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { wordAround, wrapToWords } = require("../lib/words.js");
+const { loadScripts } = require("./helpers/load.js");
+const { wordAround, wrapToWords } = loadScripts(["lib/words.js"]);
 
 // Wraps the first occurrence of `part` in `text` and returns the result.
 function wrap(text, part) {

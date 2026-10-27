@@ -73,7 +73,9 @@ measurement.
 - Symbols and names match case-insensitively (`Lei`, `ЛВ`), before or after
   the number, with or without a space (`12лв`, `lei 50`, `50 RON`). ISO codes
   must be upper case inside a sentence (`5 try` isn't Turkish lira), but any
-  case works when the selection is just the price (`ron 50`).
+  case works when the selection is just the price (`ron 50`). Codes that are
+  English words (`TOP`, `ALL`, `CUP`, `TRY`, …) never count before the number
+  (`TOP 10`) and need upper case on their own (`TRY 40`, not `top 10`).
 - `*` = ambiguous: the same symbol is used by several currencies (in CLDR,
   `$` is used by 29 currencies, `£` by 6, `kr` and `Rs` by 4 each).
 - **Target:** EUR (default), USD, RON or BGN, chosen in the settings. The

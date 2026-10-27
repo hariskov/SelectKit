@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { findMeasurements, convertMeasurement } = require("../lib/units.js");
+const { loadScripts } = require("./helpers/load.js");
+const { findMeasurements, convertMeasurement } = loadScripts(["lib/patterns.js", "lib/numbers.js", "lib/units.js"]);
 
 const METRIC = { length: "metric", weight: "kg", temperature: "C", volume: "metric", speed: "kmh", fuel: "l100km" };
 const US = { length: "imperial", weight: "lb", temperature: "F", volume: "us", speed: "mph", fuel: "mpg_us" };

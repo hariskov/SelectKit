@@ -1,5 +1,3 @@
-// Toolbar panel: about SelectKit, and a way into the settings.
-
 // Update together with the version in manifest.json.
 const RELEASE_DATE = "2026-10-27";
 

@@ -131,7 +131,7 @@ Test, detection:
 - [x] Other symbols: `₹1,23,456`, `₩50,000`, `₺250`, `R$ 99,90`, `150 zł`, `299 Kč`
 - [x] Any ISO code: `VND 250000`, `40 TRY`, `AED 100`
 - [x] Symbol and ISO code give the same result: `50 RON` = `50 lei` = `50 Lei`; `12 BGN` = `12 лв` = `12лв.` = `12 лева`; `100 UAH` = `100 грн` = `₴100`
-- [x] Lower-case codes count when the selection is just the price: `ron 50`, `50ron`, `lei 50` (but `5 try` / `10 cup` inside a sentence don't)
+- [x] Lower-case codes count when the selection is just the price: `ron 50`, `50ron`, `lei 50` (but `5 try` / `10 cup` inside a sentence don't; codes that are English words like `try`, `top` only in upper case)
 - [x] `1.299,00 лв` and `12,50 лв.` → EUR via the fixed rate
 - [x] `1,234.56`, `1.234,56`, `1 234,56` and `1'234.56` all parse correctly
 - [x] Words that only look like aliases don't trigger: `TL;DR`, `lv 5 armor`, `Ft. Worth`

@@ -12,12 +12,11 @@ function showSaved() {
   statusTimer = setTimeout(() => { statusEl.style.opacity = "0"; }, 1200);
 }
 
-async function save(key, value) {
-  await saveSetting(key, value);
+async function save(values) {
+  await saveSettings(values);
   showSaved();
 }
 
-// --- Translation target ---
 
 function renderTargetLang(current) {
   const box = document.getElementById("targetLang");
@@ -28,22 +27,20 @@ function renderTargetLang(current) {
     input.name = "targetLang";
     input.value = code;
     input.checked = code === current;
-    input.addEventListener("change", () => save("targetLang", code));
+    input.addEventListener("change", () => save({ targetLang: code }));
     label.append(input, name);
     box.append(label);
   }
 }
 
-// --- Target currency ---
 
 function renderTargetCurrency(current) {
   const select = document.getElementById("targetCurrency");
   for (const code of TARGET_CURRENCIES) select.add(new Option(currencyLabel(code), code));
   select.value = current;
-  select.addEventListener("change", () => save("targetCurrency", select.value));
+  select.addEventListener("change", () => save({ targetCurrency: select.value }));
 }
 
-// --- Exchange rates ---
 
 function describeRates(rates) {
   if (!rates) return "Exchange rates haven't been downloaded yet. They're fetched the first time you select a price.";
@@ -72,14 +69,12 @@ async function renderRates() {
   });
 }
 
-// --- Units ---
 
 function renderUnits(settings) {
   const presetBox = document.getElementById("unitPresets");
   const prefBox = document.getElementById("unitPrefs");
   const selects = {};
 
-  // A preset button is shown pressed while every unit matches it.
   const presetButtons = {};
   function markPreset() {
     for (const [name, values] of Object.entries(UNIT_PRESETS)) {
@@ -97,7 +92,7 @@ function renderUnits(settings) {
     for (const [value, text] of Object.entries(choices)) select.add(new Option(text, value));
     select.value = settings[key];
     select.addEventListener("change", async () => {
-      await save(key, select.value);
+      await save({ [key]: select.value });
       markPreset();
     });
     selects[key] = select;
@@ -111,8 +106,7 @@ function renderUnits(settings) {
     button.textContent = name;
     button.addEventListener("click", async () => {
       for (const [key, value] of Object.entries(values)) selects[key].value = value;
-      await saveSettings(values);
-      showSaved();
+      await save(values);
       markPreset();
     });
     presetButtons[name] = button;
@@ -121,12 +115,11 @@ function renderUnits(settings) {
   markPreset();
 }
 
-// --- Selection ---
 
 function renderWordWrapper(current) {
   const box = document.getElementById("wordWrapper");
   box.checked = current;
-  box.addEventListener("change", () => save("wordWrapper", box.checked));
+  box.addEventListener("change", () => save({ wordWrapper: box.checked }));
 }
 
 function renderPopupDelay(current) {
@@ -135,11 +128,10 @@ function renderPopupDelay(current) {
   input.addEventListener("change", () => {
     const value = Math.min(MAX_POPUP_DELAY, Math.max(0, Math.round(Number(input.value) || 0)));
     input.value = value;
-    save("popupDelay", value);
+    save({ popupDelay: value });
   });
 }
 
-// --- Sites ---
 
 function renderSites(blockedSites) {
   const list = document.getElementById("blockedSites");
@@ -160,7 +152,7 @@ function renderSites(blockedSites) {
     remove.textContent = "Remove";
     remove.addEventListener("click", async () => {
       const { blockedSites: current } = await getSettings();
-      await save("blockedSites", current.filter((s) => s !== site));
+      await save({ blockedSites: current.filter((s) => s !== site) });
     });
     item.append(name, remove);
     list.append(item);
@@ -181,12 +173,12 @@ function setUpAddSite() {
     }
     error.hidden = true;
     const { blockedSites } = await getSettings();
-    if (!blockedSites.includes(site)) await save("blockedSites", [...blockedSites, site]);
+    if (!blockedSites.includes(site)) await save({ blockedSites: [...blockedSites, site] });
     input.value = "";
   });
 }
 
-// Keep the list current if it's changed in another settings tab.
+// Another open settings tab may change the list.
 browser.storage.onChanged.addListener((changes, area) => {
   if (area === "sync" && changes.blockedSites) renderSites(changes.blockedSites.newValue ?? []);
 });

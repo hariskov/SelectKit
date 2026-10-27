@@ -1,8 +1,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const { loadScripts } = require("./helpers/load.js");
 const {
   fitForTranslate, googleTranslateUrl, TRANSLATE_MAX_CHARS, TRANSLATE_MAX_URL_TEXT,
-} = require("../lib/translate.js");
+} = loadScripts(["lib/translate.js"]);
 
 const urlTextLength = (text) => new URLSearchParams({ t: text }).toString().length - 2;
 

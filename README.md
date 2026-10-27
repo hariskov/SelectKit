@@ -74,10 +74,12 @@ manifest.json        extension manifest (MV3)
 background.js        background script: translate tabs, exchange rates
 panel/               toolbar panel: on/off for the current site
 content/             content scripts: popup at the mouse, Word wrapper
-test/*.test.js       unit tests (npm test)
+test/*.test.js       tests (npm test): logic, background, content scripts
+                     and extension pages (the last two in jsdom)
 lib/settings.js      settings defaults and storage helpers
 lib/translate.js     Google Translate links and length limits
 lib/words.js         word boundaries for the Word wrapper
+lib/patterns.js      regex helpers shared by units and currencies
 lib/numbers.js       reading written numbers (1,234.5 · 1.234,5)
 lib/units.js         finding and converting measurements
 lib/currencies.js    finding and converting prices

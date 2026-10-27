@@ -1,13 +1,15 @@
 {
   "name": "selectkit",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "web-ext run --firefox=flatpak:one.ablaze.floorp --start-url http://localhost:8000/playground.html",
     "playground": "python3 -m http.server -d test 8000",
     "lint": "web-ext lint",
     "test": "node --test 'test/**/*.test.js'",
-    "gen:currencies": "node scripts/gen-currencies.js"
+    "gen:currencies": "node scripts/gen-currencies.js",
+    "build": "web-ext build --overwrite-dest",
+    "sign": "web-ext sign --channel=unlisted"
   },
   "devDependencies": {
     "jsdom": "^26.1.0",
